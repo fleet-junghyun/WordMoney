@@ -1,29 +1,31 @@
 package com.be.hero.wordmoney.billionaireData
 
+import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import android.content.Context
 
-@Database(entities = [Billionaire::class], version = 1)
+@Database(entities = [Billionaire::class], version = 1, exportSchema = false)
 @TypeConverters(StringListConverter::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun billionaireDao(): BillionaireDao
 
     companion object {
-        @Volatile private var instance: AppDatabase? = null
+        @Volatile
+        private var INSTANCE: AppDatabase? = null
 
         fun getDatabase(context: Context): AppDatabase {
-            return instance ?: synchronized(this) {
-                val newInstance = Room.databaseBuilder(
+            return INSTANCE ?: synchronized(this) {
+                val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
                     "billionaire_database"
                 ).build()
-                instance = newInstance
-                newInstance
+                INSTANCE = instance
+                instance
             }
         }
     }
 }
+

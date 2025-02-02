@@ -1,7 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
+    id("org.jetbrains.kotlin.android") // ✅ 반드시 추가해야 함!
     id("com.google.gms.google-services")
+    id("kotlin-kapt")
 }
 
 
@@ -60,5 +61,12 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation("androidx.activity:activity-ktx:1.8.2")
-
+    implementation("androidx.room:room-runtime:2.6.1") // Room 기본 라이브러리
+    implementation("androidx.room:room-ktx:2.6.1") // 코루틴 지원
+    kapt("androidx.room:room-compiler:2.6.1") // Annotation Processor (필수)
 }
+
+dependencies {
+    implementation("org.jetbrains.kotlinx:kotlinx-metadata-jvm:0.9.0")
+}
+
