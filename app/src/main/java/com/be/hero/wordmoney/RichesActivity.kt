@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.be.hero.wordmoney.databinding.ActivityRichesBinding
+import com.google.firebase.FirebaseApp
+import com.google.firebase.firestore.FirebaseFirestore
 
 class RichesActivity: AppCompatActivity() {
 
@@ -37,5 +39,7 @@ class RichesActivity: AppCompatActivity() {
             .replace(R.id.fragment_container, fragment)
             .commit()
     }
+
+
 
 }

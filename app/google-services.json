@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "644489327121",
+    "project_id": "wordmoney-e75f3",
+    "storage_bucket": "wordmoney-e75f3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:644489327121:android:4897db021395f2b97537b0",
+        "android_client_info": {
+          "package_name": "com.be.hero.wordmoney"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7FIVmgk7kGiWNxA1oeokLVCCZrM0vnfI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
