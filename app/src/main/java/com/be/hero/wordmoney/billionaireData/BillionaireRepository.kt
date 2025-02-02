@@ -27,6 +27,7 @@ class BillionaireRepository(private val db: AppDatabase) {
                     for (document in documents) {
                         val billionaire = Billionaire(
                             id = document.getLong("id")?.toInt() ?: 0,
+                            rank = document.getString("rank") ?: "",
                             name = document.getString("name") ?: "",
                             netWorth = document.getString("netWorth") ?: "",
                             description = document.get("description") as? List<String> ?: emptyList(),
@@ -48,5 +49,9 @@ class BillionaireRepository(private val db: AppDatabase) {
                     Log.e("Firestore", "❌ Firestore에서 데이터를 가져오는 중 오류 발생: ", e)
                 }
         }
+    }
+
+    suspend fun getAllBillionaires(): List<Billionaire> {
+        return db.billionaireDao().getAllBillionaires()
     }
 }

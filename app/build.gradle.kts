@@ -68,5 +68,8 @@ dependencies {
 
 dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-metadata-jvm:0.9.0")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
+
 }
 
