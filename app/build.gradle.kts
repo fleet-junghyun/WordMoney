@@ -59,7 +59,6 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.8.0"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-firestore")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation("androidx.activity:activity-ktx:1.8.2")
     implementation("androidx.room:room-runtime:2.6.1") // Room 기본 라이브러리
     implementation("androidx.room:room-ktx:2.6.1") // 코루틴 지원
@@ -67,9 +66,10 @@ dependencies {
 }
 
 dependencies {
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation("org.jetbrains.kotlinx:kotlinx-metadata-jvm:0.9.0")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
-
+    implementation ("androidx.lifecycle:lifecycle-common-java8:2.6.2")
 }
 
