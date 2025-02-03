@@ -39,8 +39,6 @@ class WorldFragment : Fragment() {
 
         adapter = BillionaireAdapter(billionaireList.map { convertEntityToBillionaire(it) })
         recyclerView.adapter = adapter
-        val spaceInPx = (42 * resources.displayMetrics.density).toInt()
-        recyclerView.addItemDecoration(VerticalSpaceItemDecoration(spaceInPx))
 
         // Room에서 데이터 가져오기
         fetchBillionairesFromRoom()

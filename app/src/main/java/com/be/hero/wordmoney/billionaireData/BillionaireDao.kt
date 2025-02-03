@@ -12,4 +12,9 @@ interface BillionaireDao {
 
     @Query("DELETE FROM billionaires")
     suspend fun deleteAllBillionaires()
+
+    @Query("SELECT id FROM billionaires")
+    fun getAllBillionaireIds(): List<Int> // Room에서 ID 리스트만 가져오기
+
+
 }

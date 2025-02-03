@@ -2,6 +2,7 @@ package com.be.hero.wordmoney.billionaireData
 
 import android.util.Log
 import com.be.hero.wordmoney.data.Billionaire
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -12,43 +13,39 @@ class BillionaireRepository(private val db: AppDatabase) {
 
     fun fetchAndSaveBillionairesToLocalIfNeeded() {
         CoroutineScope(Dispatchers.IO).launch {
-            val localData = db.billionaireDao().getAllBillionaires()
-            if (localData.isNotEmpty()) {
-                Log.d("Firestore", "✅ 로컬 DB에 데이터가 이미 존재합니다. Firestore에서 가져오지 않음.")
-                return@launch
-            }
-
-            Log.d("Firestore", "📥 Firestore에서 데이터 가져오는 중...")
+            // 1️⃣ 로컬 DB에 저장된 부자들의 ID 목록 가져오기
+            val localIds = db.billionaireDao().getAllBillionaireIds()
 
             firestore.collection("billionaires")
                 .get()
                 .addOnSuccessListener { documents ->
-                    val billionaireEntityList = mutableListOf<BillionaireEntity>()
+                    val newBillionaires = mutableListOf<BillionaireEntity>()
+
                     for (document in documents) {
-                        val billionaireEntity = BillionaireEntity(
-                            id = document.getLong("id")?.toInt() ?: 0,
-                            uuid = document.getString("uuid") ?: "",
-                            name = document.getString("name") ?: "",
-                            netWorth = document.getString("netWorth") ?: "",
-                            description = document.get("description") as? List<String> ?: emptyList(),
-                            quoteCount = document.getLong("quoteCount")?.toInt() ?: 0,
-                            isSelected = document.getBoolean("isSelected") ?: false,
-                            category = document.getLong("category")?.toInt() ?: 0,
-                            listPosition = document.getLong("listPosition")?.toInt() ?: 0
-                        )
-                        billionaireEntityList.add(billionaireEntity)
+                        val billionaire = convertDocumentToBillionaireEntity(document)
+
+                        // 2️⃣ Firestore의 id가 로컬 DB에 없으면 새 데이터로 추가
+                        if (!localIds.contains(billionaire.id)) {
+                            newBillionaires.add(billionaire)
+                        }
                     }
-                    // Room Database에 저장
-                    CoroutineScope(Dispatchers.IO).launch {
-                        db.billionaireDao().insertBillionaires(billionaireEntityList)
-                        Log.d("Firestore", "✅ Firestore 데이터가 로컬 DB에 저장 완료!")
+
+                    // 3️⃣ 새 데이터가 있다면 Room에 삽입
+                    if (newBillionaires.isNotEmpty()) {
+                        CoroutineScope(Dispatchers.IO).launch {
+                            db.billionaireDao().insertBillionaires(newBillionaires)
+                            Log.d("Firestore", "🔥 Firestore에서 새 데이터를 가져와 Room에 저장 완료!")
+                        }
+                    } else {
+                        Log.d("Firestore", "✅ 새로운 데이터 없음. Room 업데이트 필요 없음.")
                     }
                 }
                 .addOnFailureListener { e ->
-                    Log.e("Firestore", "❌ Firestore에서 데이터를 가져오는 중 오류 발생: ", e)
+                    Log.e("Firestore", "❌ Firestore 데이터 가져오기 실패: ${e.message}")
                 }
         }
     }
+
 
     suspend fun getAllBillionaires(): List<BillionaireEntity> {
         return db.billionaireDao().getAllBillionaires()
@@ -80,5 +77,20 @@ class BillionaireRepository(private val db: AppDatabase) {
                 println("❌ 데이터 삽입 실패: ${e.message}")
             }
     }
+
+    fun convertDocumentToBillionaireEntity(document: DocumentSnapshot): BillionaireEntity {
+        return BillionaireEntity(
+            id = document.getLong("id")?.toInt() ?: 0,
+            uuid = document.getString("uuid") ?: "",
+            name = document.getString("name") ?: "",
+            netWorth = document.getString("netWorth") ?: "",
+            description = document.get("description") as? List<String> ?: emptyList(),
+            quoteCount = document.getLong("quoteCount")?.toInt() ?: 0,
+            isSelected = document.getBoolean("isSelected") ?: false,
+            category = document.getLong("category")?.toInt() ?: 0,
+            listPosition = document.getLong("listPosition")?.toInt() ?: 0
+        )
+    }
+
 
 }
