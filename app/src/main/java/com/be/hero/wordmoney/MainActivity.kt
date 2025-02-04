@@ -2,7 +2,6 @@ package com.be.hero.wordmoney
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -11,20 +10,22 @@ import com.be.hero.wordmoney.adapter.QuotePagerAdapter
 import com.be.hero.wordmoney.billionaireData.BillionaireViewModel
 import com.be.hero.wordmoney.data.Billionaire
 import com.be.hero.wordmoney.databinding.ActivityMainBinding
+import com.be.hero.wordmoney.quoteData.QuoteViewModel
+import com.google.firebase.firestore.FirebaseFirestore
 import java.util.UUID
 
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-
+    private lateinit var quotePagerAdapter: QuotePagerAdapter
+    private val quoteViewModel: QuoteViewModel by viewModels() // 🔥 ViewModel 사용
     private val billionaireViewModel: BillionaireViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
 
         binding.apply {
             menu.setOnClickListener {
@@ -34,28 +35,14 @@ class MainActivity : AppCompatActivity() {
                 gotoRiches()
             }
         }
+        setViewPager()
+    }
 
-        // ViewModel에서 데이터를 가져와 Room에 저장
-        billionaireViewModel.fetchAndSaveBillionaires()
-
-        // Room에서 저장된 데이터를 불러와서 출력
-        billionaireViewModel.billionaires.observe(this, Observer { list ->
-            list.forEach { billionaire ->
-                Log.d("Billionaire", "🔥 ${billionaire.name} - ${billionaire.netWorth}")
-            }
-        })
-
-
-        val quotes = listOf(
-            "돈을 버는 것보다 더 중요한 것은 세계를 더 나은 곳으로 만드는 것이다.",
-        )
-
-        val adapter = QuotePagerAdapter(quotes)
-        binding.apply {
-            viewPager.adapter = adapter
-            viewPager.orientation = ViewPager2.ORIENTATION_VERTICAL
-        }
-
+    private fun setViewPager() {
+        quotePagerAdapter = QuotePagerAdapter(emptyList())
+        binding.viewPager.adapter = quotePagerAdapter
+        binding.viewPager.orientation = ViewPager2.ORIENTATION_VERTICAL
+        quoteViewModel.allQuotes.observe(this, Observer { quotes -> quotePagerAdapter.updateQuotes(quotes) })
     }
 
     private fun goToMenu() {
@@ -65,6 +52,109 @@ class MainActivity : AppCompatActivity() {
     private fun gotoRiches() {
         Intent(this, RichesActivity::class.java).run { startActivity(this) }
     }
+
+    private fun insertElonMuskQuotesToFirestore() {
+        val firestore = FirebaseFirestore.getInstance()
+
+        // 🔥 Elon Musk의 UUID (이 값은 Firestore에서 확인 후 넣어주세요)
+        val elonMuskUUID = "c30f4a76-307c-4bb3-aba6-e48c75cbe363" // 🔴 Firestore에서 가져온 UUID로 변경해야 함
+
+        // 🔥 Elon Musk의 명언 데이터 리스트 (10개)
+        val quoteList = listOf(
+            mapOf(
+                "id" to 1,
+                "richId" to 1, // Elon Musk의 ID
+                "uuid" to UUID.randomUUID().toString(),
+                "quote" to "나는 결코 포기하지 않는다. 절대 아니다.",
+                "author" to "Elon Musk",
+                "isBookmarked" to false
+            ),
+            mapOf(
+                "id" to 2,
+                "richId" to 1,
+                "uuid" to UUID.randomUUID().toString(),
+                "quote" to "위험을 감수하지 않으면 평범한 삶을 살게 된다.",
+                "author" to "Elon Musk",
+                "isBookmarked" to false
+            ),
+            mapOf(
+                "id" to 3,
+                "richId" to 1,
+                "uuid" to UUID.randomUUID().toString(),
+                "quote" to "가장 큰 실수는 도전하지 않는 것이다.",
+                "author" to "Elon Musk",
+                "isBookmarked" to false
+            ),
+            mapOf(
+                "id" to 4,
+                "richId" to 1,
+                "uuid" to UUID.randomUUID().toString(),
+                "quote" to "지속적인 혁신이 없다면 도태될 것이다.",
+                "author" to "Elon Musk",
+                "isBookmarked" to false
+            ),
+            mapOf(
+                "id" to 5,
+                "richId" to 1,
+                "uuid" to UUID.randomUUID().toString(),
+                "quote" to "성공을 확신하지 못해도 시도해야 한다.",
+                "author" to "Elon Musk",
+                "isBookmarked" to false
+            ),
+            mapOf(
+                "id" to 6,
+                "richId" to 1,
+                "uuid" to UUID.randomUUID().toString(),
+                "quote" to "나의 목표는 단순한 것이 아니다. 나는 인류의 미래를 바꿀 것이다.",
+                "author" to "Elon Musk",
+                "isBookmarked" to false
+            ),
+            mapOf(
+                "id" to 7,
+                "richId" to 1,
+                "uuid" to UUID.randomUUID().toString(),
+                "quote" to "비판을 받아들이고, 더 나은 방향으로 나아가라.",
+                "author" to "Elon Musk",
+                "isBookmarked" to false
+            ),
+            mapOf(
+                "id" to 8,
+                "richId" to 1,
+                "uuid" to UUID.randomUUID().toString(),
+                "quote" to "대부분의 사람들이 실패하는 이유는 실행하지 않기 때문이다.",
+                "author" to "Elon Musk",
+                "isBookmarked" to false
+            ),
+            mapOf(
+                "id" to 9,
+                "richId" to 1,
+                "uuid" to UUID.randomUUID().toString(),
+                "quote" to "기술의 발전은 필수적이다. 우리는 멈출 수 없다.",
+                "author" to "Elon Musk",
+                "isBookmarked" to false
+            ),
+            mapOf(
+                "id" to 10,
+                "richId" to 1,
+                "uuid" to UUID.randomUUID().toString(),
+                "quote" to "불가능하다고 생각되는 일을 해내야만 혁신이 이루어진다.",
+                "author" to "Elon Musk",
+                "isBookmarked" to false
+            )
+        )
+
+        val documentRef = firestore.collection("quotes").document(elonMuskUUID)
+
+        // 데이터를 한 번에 저장 (배치)
+        documentRef.set(mapOf("quotes" to quoteList))
+            .addOnSuccessListener {
+                println("🔥 Elon Musk 명언 10개 Firestore 저장 완료!")
+            }
+            .addOnFailureListener { e ->
+                println("❌ Firestore 저장 실패: ${e.message}")
+            }
+    }
+
 
     private fun insertFireStoreRiches() {
         // 예제 데이터 생성
@@ -221,8 +311,6 @@ class MainActivity : AppCompatActivity() {
 
         billionaireViewModel.insertMultipleBillionairesToFirestore(billionaireList)
     }
-
-
 
 
 }

@@ -11,9 +11,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.be.hero.wordmoney.adapter.BillionaireAdapter
 import com.be.hero.wordmoney.adapter.VerticalSpaceItemDecoration
+import com.be.hero.wordmoney.billionaireData.AppDatabase
 import com.be.hero.wordmoney.billionaireData.BillionaireEntity
 import com.be.hero.wordmoney.billionaireData.BillionaireViewModel
 import com.be.hero.wordmoney.data.Billionaire
+import com.be.hero.wordmoney.quoteData.QuoteRepository
 
 
 class WorldFragment : Fragment() {
@@ -23,6 +25,7 @@ class WorldFragment : Fragment() {
     private lateinit var adapter: BillionaireAdapter
     private val billionaireList = mutableListOf<BillionaireEntity>() // Room에서 가져올 데이터 저장
     private lateinit var billionaireViewModel: BillionaireViewModel
+    private lateinit var quoteRepository: QuoteRepository
 
 
     override fun onCreateView(
@@ -33,12 +36,12 @@ class WorldFragment : Fragment() {
 
         billionaireViewModel = ViewModelProvider(this)[BillionaireViewModel::class.java]
 
+
+        val db = AppDatabase.getDatabase(requireContext())
+        quoteRepository = QuoteRepository(db) // 🔥 Repository 초기화
         // RecyclerView 초기화
         recyclerView = view.findViewById(R.id.recycler_view_world)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-
-        adapter = BillionaireAdapter(billionaireList.map { convertEntityToBillionaire(it) })
-        recyclerView.adapter = adapter
 
         // Room에서 데이터 가져오기
         fetchBillionairesFromRoom()
@@ -50,7 +53,7 @@ class WorldFragment : Fragment() {
         billionaireViewModel.billionaires.observe(viewLifecycleOwner) { billionaireEntities ->
             billionaireList.clear()
             billionaireList.addAll(billionaireEntities)
-            adapter = BillionaireAdapter(billionaireList.map { convertEntityToBillionaire(it) })
+            adapter = BillionaireAdapter(billionaireList.map { convertEntityToBillionaire(it) }, quoteRepository)
             recyclerView.adapter = adapter
         }
     }
