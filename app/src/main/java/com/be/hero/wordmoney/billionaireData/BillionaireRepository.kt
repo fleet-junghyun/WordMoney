@@ -53,7 +53,7 @@ class BillionaireRepository(private val db: AppDatabase) {
 
 
     // ✅ Room의 LiveData를 직접 반환하도록 수정
-     fun getAllBillionaires(): LiveData<List<BillionaireEntity>> {
+     fun getAllBillionaires(): LiveData<List<Billionaire>> {
         return billionaireDao.getAllBillionaires()
     }
 

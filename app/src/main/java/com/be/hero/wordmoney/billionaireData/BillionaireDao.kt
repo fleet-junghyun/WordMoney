@@ -2,6 +2,7 @@ package com.be.hero.wordmoney.billionaireData
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.be.hero.wordmoney.data.Billionaire
 
 @Dao
 interface BillionaireDao {
@@ -9,7 +10,7 @@ interface BillionaireDao {
     suspend fun insertBillionaires(billionaireEntities: List<BillionaireEntity>)
 
     @Query("SELECT * FROM billionaires ORDER BY listPosition ASC")
-    fun getAllBillionaires(): LiveData<List<BillionaireEntity>>
+    fun getAllBillionaires(): LiveData<List<Billionaire>>
 
     @Query("DELETE FROM billionaires")
     suspend fun deleteAllBillionaires()

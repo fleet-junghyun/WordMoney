@@ -14,7 +14,7 @@ class BillionaireViewModel(application: Application) : AndroidViewModel(applicat
     private val repository = BillionaireRepository(db)
 
     // ✅ MutableLiveData 대신 Room의 LiveData 직접 사용
-    val billionaires: LiveData<List<BillionaireEntity>> = repository.getAllBillionaires()
+    val billionaires: LiveData<List<Billionaire>> = repository.getAllBillionaires()
 
     init {
         fetchAndSaveBillionaires()
