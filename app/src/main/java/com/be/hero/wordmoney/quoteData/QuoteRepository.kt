@@ -7,16 +7,17 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.UUID
 
 class QuoteRepository(private val db: AppDatabase) {
     private val firestore = FirebaseFirestore.getInstance()
 
     // 특정 부자의 명언을 Firestore에서 가져와 Room에 저장
-    fun fetchAndSaveQuotesByBillionaire(richId: Int) {
+    fun fetchAndSaveQuotesByBillionaire(richId: Int,uuid:String) {
         CoroutineScope(Dispatchers.IO).launch {
             val localQuoteIds = db.quoteDao().getQuotesByBillionaireList(richId) // Room에 저장된 명언 목록 가져오기
 
-            firestore.collection("quotes").document("c30f4a76-307c-4bb3-aba6-e48c75cbe363") // 🔴 Document ID는 동적으로 변경 가능
+            firestore.collection("quotes").document(uuid) // 🔴 Document ID는 동적으로 변경 가능
                 .get()
                 .addOnSuccessListener { document ->
                     val quotesArray = document["quotes"] as? List<Map<String, Any>> ?: emptyList()

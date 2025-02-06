@@ -1,6 +1,7 @@
 package com.be.hero.wordmoney.billionaireData
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import com.be.hero.wordmoney.data.Billionaire
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
@@ -9,9 +10,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class BillionaireRepository(private val db: AppDatabase) {
+
     private val firestore = FirebaseFirestore.getInstance()
 
-    fun fetchAndSaveBillionairesToLocalIfNeeded() {
+    private val billionaireDao = db.billionaireDao()
+
+
+    suspend fun fetchAndSaveBillionairesToLocalIfNeeded() {
         CoroutineScope(Dispatchers.IO).launch {
             // 1️⃣ 로컬 DB에 저장된 부자들의 ID 목록 가져오기
             val localIds = db.billionaireDao().getAllBillionaireIds()
@@ -47,8 +52,9 @@ class BillionaireRepository(private val db: AppDatabase) {
     }
 
 
-    suspend fun getAllBillionaires(): List<BillionaireEntity> {
-        return db.billionaireDao().getAllBillionaires()
+    // ✅ Room의 LiveData를 직접 반환하도록 수정
+     fun getAllBillionaires(): LiveData<List<BillionaireEntity>> {
+        return billionaireDao.getAllBillionaires()
     }
 
     fun insertBillionaireToFirestore(billionaire: Billionaire) {
@@ -78,7 +84,7 @@ class BillionaireRepository(private val db: AppDatabase) {
             }
     }
 
-    fun convertDocumentToBillionaireEntity(document: DocumentSnapshot): BillionaireEntity {
+    private fun convertDocumentToBillionaireEntity(document: DocumentSnapshot): BillionaireEntity {
         return BillionaireEntity(
             id = document.getLong("id")?.toInt() ?: 0,
             uuid = document.getString("uuid") ?: "",
@@ -90,6 +96,11 @@ class BillionaireRepository(private val db: AppDatabase) {
             category = document.getLong("category")?.toInt() ?: 0,
             listPosition = document.getLong("listPosition")?.toInt() ?: 0
         )
+    }
+
+    // ✅ 특정 부자의 isSelected 값을 업데이트하는 함수
+    suspend fun updateBillionaireSelection(billionaireId: Int, isSelected: Boolean) {
+        billionaireDao.updateBillionaireSelection(billionaireId, isSelected)
     }
 
 

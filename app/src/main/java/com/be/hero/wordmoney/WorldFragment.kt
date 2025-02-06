@@ -15,47 +15,38 @@ import com.be.hero.wordmoney.billionaireData.AppDatabase
 import com.be.hero.wordmoney.billionaireData.BillionaireEntity
 import com.be.hero.wordmoney.billionaireData.BillionaireViewModel
 import com.be.hero.wordmoney.data.Billionaire
+import com.be.hero.wordmoney.databinding.FragmentWorldBinding
 import com.be.hero.wordmoney.quoteData.QuoteRepository
 
 
 class WorldFragment : Fragment() {
-
-
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: BillionaireAdapter
-    private val billionaireList = mutableListOf<BillionaireEntity>() // Room에서 가져올 데이터 저장
+    private var _binding: FragmentWorldBinding? = null
+    private val binding get() = _binding!!
     private lateinit var billionaireViewModel: BillionaireViewModel
-    private lateinit var quoteRepository: QuoteRepository
 
+    private val billionaireAdapter: BillionaireAdapter by lazy {
+        BillionaireAdapter()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_world, container, false)
+        _binding = FragmentWorldBinding.inflate(inflater, container, false)
 
         billionaireViewModel = ViewModelProvider(this)[BillionaireViewModel::class.java]
 
-
-        val db = AppDatabase.getDatabase(requireContext())
-        quoteRepository = QuoteRepository(db) // 🔥 Repository 초기화
-        // RecyclerView 초기화
-        recyclerView = view.findViewById(R.id.recycler_view_world)
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-
-        // Room에서 데이터 가져오기
-        fetchBillionairesFromRoom()
-
-        return view
-    }
-
-    private fun fetchBillionairesFromRoom() {
         billionaireViewModel.billionaires.observe(viewLifecycleOwner) { billionaireEntities ->
-            billionaireList.clear()
-            billionaireList.addAll(billionaireEntities)
-            adapter = BillionaireAdapter(billionaireList.map { convertEntityToBillionaire(it) }, quoteRepository)
-            recyclerView.adapter = adapter
+            val billionaireList = billionaireEntities.map { convertEntityToBillionaire(it) }
+            billionaireAdapter.submitList(billionaireList)
         }
+
+        binding.recyclerViewWorld.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            adapter = billionaireAdapter
+        }
+
+        return binding.root
     }
 
     private fun convertEntityToBillionaire(entity: BillionaireEntity): Billionaire {
@@ -71,4 +62,10 @@ class WorldFragment : Fragment() {
             listPosition = entity.listPosition
         )
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
 }

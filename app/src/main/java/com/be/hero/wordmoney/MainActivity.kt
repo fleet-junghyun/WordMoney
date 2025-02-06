@@ -36,6 +36,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
         setViewPager()
+
+
     }
 
     private fun setViewPager() {
