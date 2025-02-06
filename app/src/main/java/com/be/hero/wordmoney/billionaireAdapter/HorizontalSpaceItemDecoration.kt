@@ -1,4 +1,4 @@
-package com.be.hero.wordmoney.adapter
+package com.be.hero.wordmoney.billionaireAdapter
 
 import android.graphics.Rect
 import android.view.View

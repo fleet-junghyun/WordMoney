@@ -1,4 +1,4 @@
-package com.be.hero.wordmoney.adapter
+package com.be.hero.wordmoney.quoteAdapter
 
 import android.view.LayoutInflater
 import android.view.View

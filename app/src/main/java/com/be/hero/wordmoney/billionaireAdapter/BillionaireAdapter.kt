@@ -1,4 +1,4 @@
-package com.be.hero.wordmoney.adapter
+package com.be.hero.wordmoney.billionaireAdapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

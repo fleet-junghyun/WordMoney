@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.be.hero.wordmoney.adapter.BillionaireAdapter
+import com.be.hero.wordmoney.billionaireAdapter.BillionaireAdapter
 import com.be.hero.wordmoney.billionaireData.BillionaireViewModel
 import com.be.hero.wordmoney.databinding.FragmentWorldBinding
 

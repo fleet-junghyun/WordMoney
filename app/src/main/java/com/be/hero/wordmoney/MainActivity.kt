@@ -6,7 +6,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.viewpager2.widget.ViewPager2
-import com.be.hero.wordmoney.adapter.QuotePagerAdapter
+import com.be.hero.wordmoney.quoteAdapter.QuotePagerAdapter
 import com.be.hero.wordmoney.billionaireData.BillionaireViewModel
 import com.be.hero.wordmoney.data.Billionaire
 import com.be.hero.wordmoney.databinding.ActivityMainBinding
