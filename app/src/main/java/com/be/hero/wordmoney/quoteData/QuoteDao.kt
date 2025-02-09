@@ -30,5 +30,5 @@ interface QuoteDao {
     fun getQuotesByBillionaireList(richId: Int): List<Int> // 🔥 특정 부자의 명언 ID 리스트 가져오기
 
     @Query("SELECT * FROM quotes ORDER BY id ASC")
-    fun getAllQuotes(): LiveData<List<QuoteEntity>> // 🔥 모든 명언 가져오기
+    fun getAllQuotes(): LiveData<List<Quote>> // 🔥 모든 명언 가져오기
 }

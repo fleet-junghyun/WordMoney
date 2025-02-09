@@ -6,9 +6,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.be.hero.wordmoney.R
+import com.be.hero.wordmoney.quoteData.Quote
 import com.be.hero.wordmoney.quoteData.QuoteEntity
 
-class QuotePagerAdapter(private var quotes: List<QuoteEntity>) : RecyclerView.Adapter<QuotePagerAdapter.QuoteViewHolder>() {
+class QuotePagerAdapter(private var quotes: List<Quote>) : RecyclerView.Adapter<QuotePagerAdapter.QuoteViewHolder>() {
     class QuoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val quoteTextView: TextView = itemView.findViewById(R.id.tv_quote)
         val authorTextView: TextView = itemView.findViewById(R.id.tv_author)
@@ -29,7 +30,7 @@ class QuotePagerAdapter(private var quotes: List<QuoteEntity>) : RecyclerView.Ad
     override fun getItemCount(): Int = quotes.size
 
     // 🔥 데이터 변경 시 갱신
-    fun updateQuotes(newQuotes: List<QuoteEntity>) {
+    fun updateQuotes(newQuotes: List<Quote>) {
         quotes = newQuotes
         notifyDataSetChanged()
     }

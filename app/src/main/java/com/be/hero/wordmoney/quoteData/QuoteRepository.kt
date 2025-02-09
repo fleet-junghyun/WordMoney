@@ -1,25 +1,33 @@
 package com.be.hero.wordmoney.quoteData
 
+import android.app.Application
+import android.content.Context
 import android.util.Log
+import androidx.lifecycle.LiveData
 import com.be.hero.wordmoney.billionaireData.AppDatabase
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.UUID
 
-class QuoteRepository(private val db: AppDatabase) {
+class QuoteRepository(application: Application) {
     private val firestore = FirebaseFirestore.getInstance()
+    private val db = AppDatabase.get(application)
+    private val billionaireDao = db.quoteDao()
+
+    // ✅ Room의 LiveData를 직접 반환하도록 수정
+    fun getAllQuotes(): LiveData<List<Quote>> {
+        return billionaireDao.getAllQuotes()
+    }
 
     /**
      * Firestore에서 해당 부자의 Quote 데이터를 가져와서 Room에 저장하는 함수
      * Document ID는 부자의 uuid로 Firestore에서 관리되고, 데이터는 quotes 필드에 배열로 저장되어 있다고 가정함.
      */
-    fun fetchAndSaveQuotesByBillionaire(richId: Int, richUuid: String, callback: (Boolean) -> Unit) {
+    fun fetchAndSaveQuotesByBillionaire(richId: Int, richUuid: String) {
         CoroutineScope(Dispatchers.IO).launch {
             // 기존 Room 데이터의 Quote ID 리스트를 가져옴
-            val localQuoteIds = db.quoteDao().getQuotesByBillionaireList(richId)
+            val localQuoteIds = billionaireDao.getQuotesByBillionaireList(richId)
 
             firestore.collection("quotes").document(richUuid)
                 .get()
@@ -46,19 +54,26 @@ class QuoteRepository(private val db: AppDatabase) {
 
                     if (newQuotes.isNotEmpty()) {
                         CoroutineScope(Dispatchers.IO).launch {
-                            db.quoteDao().insertQuotes(newQuotes)
+                            billionaireDao.insertQuotes(newQuotes)
                             Log.d("QuoteRepository", "Firestore에서 새 명언 ${newQuotes.size}개 Room에 저장 완료!")
-                            callback(true)
                         }
                     } else {
                         Log.d("QuoteRepository", "새로운 명언 없음.")
-                        callback(true)
                     }
                 }
                 .addOnFailureListener { e ->
                     Log.e("QuoteRepository", "Firestore 명언 데이터 가져오기 실패: ${e.message}")
-                    callback(false)
                 }
+        }
+    }
+
+    companion object {
+        private var INSTANCE: QuoteRepository? = null
+        fun get(context: Context) = get(context.applicationContext as Application)
+        fun get(application: Application) = INSTANCE ?: synchronized(this) {
+            QuoteRepository(application).also {
+                INSTANCE = it
+            }
         }
     }
 }
