@@ -1,5 +1,7 @@
 package com.be.hero.wordmoney.billionaireData
 
+import android.app.Application
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import com.be.hero.wordmoney.data.Billionaire
@@ -9,17 +11,17 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class BillionaireRepository(private val db: AppDatabase) {
+class BillionaireRepository(application: Application) {
 
+    private val db = AppDatabase.get(application)
     private val firestore = FirebaseFirestore.getInstance()
-
     private val billionaireDao = db.billionaireDao()
 
 
-    suspend fun fetchAndSaveBillionairesToLocalIfNeeded() {
+    fun SaveBillionairesToRoomFromFirestore() {
         CoroutineScope(Dispatchers.IO).launch {
             // 1️⃣ 로컬 DB에 저장된 부자들의 ID 목록 가져오기
-            val localIds = db.billionaireDao().getAllBillionaireIds()
+            val localIds = billionaireDao.getAllBillionaireIds()
 
             firestore.collection("billionaires")
                 .get()
@@ -38,7 +40,7 @@ class BillionaireRepository(private val db: AppDatabase) {
                     // 3️⃣ 새 데이터가 있다면 Room에 삽입
                     if (newBillionaires.isNotEmpty()) {
                         CoroutineScope(Dispatchers.IO).launch {
-                            db.billionaireDao().insertBillionaires(newBillionaires)
+                            billionaireDao.insertBillionaires(newBillionaires)
                             Log.d("Firestore", "🔥 Firestore에서 새 데이터를 가져와 Room에 저장 완료!")
                         }
                     } else {
@@ -51,9 +53,12 @@ class BillionaireRepository(private val db: AppDatabase) {
         }
     }
 
+    fun updateBillionaireIsSelected(billionaire: Billionaire) = billionaireDao.updateBillionaireSelection(billionaire.id ,billionaire.isSelected)
+
+
 
     // ✅ Room의 LiveData를 직접 반환하도록 수정
-     fun getAllBillionaires(): LiveData<List<Billionaire>> {
+    fun getAllBillionaires(): LiveData<List<Billionaire>> {
         return billionaireDao.getAllBillionaires()
     }
 
@@ -98,9 +103,16 @@ class BillionaireRepository(private val db: AppDatabase) {
         )
     }
 
-    // ✅ 특정 부자의 isSelected 값을 업데이트하는 함수
-    suspend fun updateBillionaireSelection(billionaireId: Int, isSelected: Boolean) {
-        billionaireDao.updateBillionaireSelection(billionaireId, isSelected)
+
+
+    companion object {
+        private var INSTANCE: BillionaireRepository? = null
+        fun get(context: Context) = get(context.applicationContext as Application)
+        fun get(application: Application) = INSTANCE ?: synchronized(this) {
+            BillionaireRepository(application).also {
+                INSTANCE = it
+            }
+        }
     }
 
 

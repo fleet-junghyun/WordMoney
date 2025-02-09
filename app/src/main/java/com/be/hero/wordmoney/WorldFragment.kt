@@ -4,11 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.be.hero.wordmoney.billionaireAdapter.BillionaireAdapter
 import com.be.hero.wordmoney.billionaireData.BillionaireViewModel
+import com.be.hero.wordmoney.data.Billionaire
 import com.be.hero.wordmoney.databinding.FragmentWorldBinding
 
 
@@ -35,6 +37,14 @@ class WorldFragment : Fragment() {
         binding.recyclerViewWorld.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             adapter = billionaireAdapter
+            billionaireAdapter.setOnItemClickListener(object : BillionaireAdapter.ItemClickListener {
+                override fun addClick(billionaire: Billionaire) {
+                    val updatedBillionaire = billionaire.copy(isSelected = !billionaire.isSelected)
+                    Toast.makeText(context, updatedBillionaire.isSelected.toString(), Toast.LENGTH_SHORT).show()
+
+                    billionaireViewModel.updateBillionaireIsSelected(updatedBillionaire)
+                }
+            })
         }
 
         return binding.root

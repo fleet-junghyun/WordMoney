@@ -75,10 +75,10 @@
                 />
             
             <ImageView
-                android:id="@+id/iv_add"
+                android:id="@+id/iv_unselected"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_add"
+                android:src="@drawable/ic_unselected"
                 app:layout_constraintTop_toTopOf="@id/v_add"
                 app:layout_constraintBottom_toBottomOf="@id/v_add"
                 app:layout_constraintStart_toStartOf="@id/v_add"

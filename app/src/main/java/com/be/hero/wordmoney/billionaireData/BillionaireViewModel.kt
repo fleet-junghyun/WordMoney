@@ -3,26 +3,30 @@ package com.be.hero.wordmoney.billionaireData
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.be.hero.wordmoney.data.Billionaire
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class BillionaireViewModel(application: Application) : AndroidViewModel(application) {
-    private val db = AppDatabase.getDatabase(application)
-    private val repository = BillionaireRepository(db)
+    private val repository = BillionaireRepository.get(application)
 
     // ✅ MutableLiveData 대신 Room의 LiveData 직접 사용
     val billionaires: LiveData<List<Billionaire>> = repository.getAllBillionaires()
 
     init {
-        fetchAndSaveBillionaires()
+        firstSaveBillionaires()
     }
 
-     private fun fetchAndSaveBillionaires() {
+    private fun firstSaveBillionaires() {
         viewModelScope.launch {
-            repository.fetchAndSaveBillionairesToLocalIfNeeded()
+            repository.SaveBillionairesToRoomFromFirestore()
+        }
+    }
+
+    fun updateBillionaireIsSelected(billionaire: Billionaire) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.updateBillionaireIsSelected(billionaire)
         }
     }
 
@@ -32,10 +36,4 @@ class BillionaireViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
-    // ✅ isSelected 상태 변경 함수
-    fun updateBillionaireSelection(billionaireId: Int, isSelected: Boolean) {
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.updateBillionaireSelection(billionaireId, isSelected)
-        }
-    }
 }

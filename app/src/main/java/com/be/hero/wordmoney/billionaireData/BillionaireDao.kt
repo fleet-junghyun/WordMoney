@@ -19,6 +19,6 @@ interface BillionaireDao {
     fun getAllBillionaireIds(): List<Int> // Room에서 ID 리스트만 가져오기
 
     @Query("UPDATE billionaires SET isSelected = :isSelected WHERE id = :billionaireId")
-    suspend fun updateBillionaireSelection(billionaireId: Int, isSelected: Boolean) // ✅ 선택 상태 업데이트 추가
+    fun updateBillionaireSelection(billionaireId: Int, isSelected: Boolean) // ✅ 선택 상태 업데이트 추가
 
 }

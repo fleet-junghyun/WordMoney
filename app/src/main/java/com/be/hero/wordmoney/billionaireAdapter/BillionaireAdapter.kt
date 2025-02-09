@@ -6,11 +6,22 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.be.hero.wordmoney.R
 import com.be.hero.wordmoney.data.Billionaire
 import com.be.hero.wordmoney.databinding.ItemRichBinding
 
 
-class BillionaireAdapter : ListAdapter<Billionaire, BillionaireAdapter.BillionaireViewHolder>(DIFF_CALLBACK){
+class BillionaireAdapter : ListAdapter<Billionaire, BillionaireAdapter.BillionaireViewHolder>(DIFF_CALLBACK) {
+
+    interface ItemClickListener {
+        fun addClick(billionaire: Billionaire)
+    }
+
+    private var itemClickListener: ItemClickListener? = null
+
+    fun setOnItemClickListener(listener: ItemClickListener) {
+        this.itemClickListener = listener
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BillionaireViewHolder {
         val binding = ItemRichBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -21,7 +32,7 @@ class BillionaireAdapter : ListAdapter<Billionaire, BillionaireAdapter.Billionai
         holder.bind(getItem(position))
     }
 
-    class BillionaireViewHolder(private val binding: ItemRichBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class BillionaireViewHolder(private val binding: ItemRichBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(billionaire: Billionaire) {
             binding.tvRank.text = "${billionaire.listPosition}위"
             binding.richName.text = billionaire.name
@@ -34,6 +45,15 @@ class BillionaireAdapter : ListAdapter<Billionaire, BillionaireAdapter.Billionai
             if (binding.rvProfile.itemDecorationCount == 0) {
                 val spaceInPx = (16 * binding.root.resources.displayMetrics.density).toInt() // 16dp를 px로 변환
                 binding.rvProfile.addItemDecoration(HorizontalSpaceItemDecoration(spaceInPx))
+            }
+            // ✅ `isSelected` 값에 따라 아이콘 변경
+            binding.ivUnselected.setImageResource(
+                if (billionaire.isSelected) R.drawable.ic_is_selected // ✅ 선택된 상태 아이콘
+                else R.drawable.ic_unselected // ✅ 선택되지 않은 상태 아이콘
+            )
+
+            binding.btnAdd.setOnClickListener {
+                itemClickListener?.addClick(billionaire)
             }
         }
     }

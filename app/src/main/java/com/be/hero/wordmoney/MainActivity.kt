@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
         quotePagerAdapter = QuotePagerAdapter(emptyList())
         binding.viewPager.adapter = quotePagerAdapter
         binding.viewPager.orientation = ViewPager2.ORIENTATION_VERTICAL
-        quoteViewModel.allQuotes.observe(this, Observer { quotes -> quotePagerAdapter.updateQuotes(quotes) })
+//        quoteViewModel.allQuotes.observe(this, Observer { quotes -> quotePagerAdapter.updateQuotes(quotes) })
     }
 
     private fun goToMenu() {
