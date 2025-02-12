@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.be.hero.wordmoney.billionaireAdapter.BillionaireAdapter
 import com.be.hero.wordmoney.billionaireData.BillionaireViewModel
-import com.be.hero.wordmoney.data.Billionaire
+import com.be.hero.wordmoney.billionaireData.Billionaire
 import com.be.hero.wordmoney.databinding.FragmentWorldBinding
 import com.be.hero.wordmoney.quoteData.QuoteViewModel
 
@@ -43,10 +43,12 @@ class WorldFragment : Fragment() {
             adapter = billionaireAdapter
             billionaireAdapter.setOnItemClickListener(object : BillionaireAdapter.ItemClickListener {
                 override fun addClick(billionaire: Billionaire) {
-                    if(!billionaire.isSelected){
+                    if (!billionaire.isSelected) {
                         quoteViewModel.fetchAndSaveQuotesByBillionaire(billionaire)
-                    }else{
+                    } else {
                         //해당 quote 삭제 코드
+                        Toast.makeText(context, billionaire.id.toString(), Toast.LENGTH_SHORT).show()
+                        quoteViewModel.deleteQuotesForBillionaire(billionaire.id)
                     }
                     val updatedBillionaire = billionaire.copy(isSelected = !billionaire.isSelected)
                     Toast.makeText(context, updatedBillionaire.isSelected.toString(), Toast.LENGTH_SHORT).show()

@@ -73,7 +73,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 android:background="@drawable/bg_gray_900_radius_16dp"
                 />
-            
+
             <ImageView
                 android:id="@+id/iv_unselected"
                 android:layout_width="wrap_content"
@@ -107,45 +107,19 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="22dp"
+        android:layout_marginStart="66dp"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <View
-        android:id="@+id/v_number_quotes"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@drawable/bg_gray_900_radius_16dp"
-        app:layout_constraintStart_toStartOf="@id/tv_number_quotes"
-        app:layout_constraintTop_toTopOf="@id/tv_number_quotes"
-        app:layout_constraintBottom_toBottomOf="@id/tv_number_quotes"
-        app:layout_constraintEnd_toEndOf="@id/tv_number_quotes"
-        />
 
-    <TextView
-        android:id="@+id/tv_number_quotes"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="돈이 되는 말 총 160개"
-        android:textSize="12sp"
-        android:textColor="@color/white"
-        android:textStyle="normal"
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="24dp"
         app:layout_constraintTop_toBottomOf="@id/profile"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="14dp"
-        android:layout_marginStart="41dp"
-        android:paddingStart="20dp"
-        android:paddingEnd="20dp"
-        android:paddingTop="9dp"
-        android:paddingBottom="9dp"
-        />
-
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="24dp"
-        app:layout_constraintTop_toBottomOf="@id/tv_number_quotes"
+        app:layout_constraintEnd_toEndOf="parent"
         />
 
 

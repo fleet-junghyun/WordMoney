@@ -1,4 +1,4 @@
-package com.be.hero.wordmoney.data
+package com.be.hero.wordmoney.billionaireData
 
 data class Billionaire(
     val id: Int, // Firestore의 숫자형 ID (Room에서도 기본 키로 사용)

@@ -2,7 +2,6 @@ package com.be.hero.wordmoney.billionaireData
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.be.hero.wordmoney.data.Billionaire
 
 @Dao
 interface BillionaireDao {

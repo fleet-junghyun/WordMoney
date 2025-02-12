@@ -8,7 +8,7 @@ import androidx.lifecycle.Observer
 import androidx.viewpager2.widget.ViewPager2
 import com.be.hero.wordmoney.quoteAdapter.QuotePagerAdapter
 import com.be.hero.wordmoney.billionaireData.BillionaireViewModel
-import com.be.hero.wordmoney.data.Billionaire
+import com.be.hero.wordmoney.billionaireData.Billionaire
 import com.be.hero.wordmoney.databinding.ActivityMainBinding
 import com.be.hero.wordmoney.quoteData.QuoteViewModel
 import com.google.firebase.firestore.FirebaseFirestore
@@ -26,7 +26,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         binding.apply {
             menu.setOnClickListener {
                 goToMenu()
@@ -36,8 +35,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
         setViewPager()
-
-
     }
 
     private fun setViewPager() {
@@ -57,102 +54,62 @@ class MainActivity : AppCompatActivity() {
         Intent(this, RichesActivity::class.java).run { startActivity(this) }
     }
 
-    private fun insertElonMuskQuotesToFirestore() {
+    private fun insertJeffBezosQuotesToFirestore() {
         val firestore = FirebaseFirestore.getInstance()
+        val authorUUID = "45ff6cab-e67a-4db1-b815-6e70d94d86ba" // 🔴 Firestore에서 가져온 UUID로 변경해야 함
+        val author = "Jeff Bezos"
+        val richId = 2
 
-        // 🔥 Elon Musk의 UUID (이 값은 Firestore에서 확인 후 넣어주세요)
-        val elonMuskUUID = "c30f4a76-307c-4bb3-aba6-e48c75cbe363" // 🔴 Firestore에서 가져온 UUID로 변경해야 함
-
-        // 🔥 Elon Musk의 명언 데이터 리스트 (10개)
-        val quoteList = listOf(
-            mapOf(
-                "id" to 1,
-                "richId" to 1, // Elon Musk의 ID
-                "uuid" to UUID.randomUUID().toString(),
-                "quote" to "나는 결코 포기하지 않는다. 절대 아니다.",
-                "author" to "Elon Musk",
-                "isBookmarked" to false
-            ),
-            mapOf(
-                "id" to 2,
-                "richId" to 1,
-                "uuid" to UUID.randomUUID().toString(),
-                "quote" to "위험을 감수하지 않으면 평범한 삶을 살게 된다.",
-                "author" to "Elon Musk",
-                "isBookmarked" to false
-            ),
-            mapOf(
-                "id" to 3,
-                "richId" to 1,
-                "uuid" to UUID.randomUUID().toString(),
-                "quote" to "가장 큰 실수는 도전하지 않는 것이다.",
-                "author" to "Elon Musk",
-                "isBookmarked" to false
-            ),
-            mapOf(
-                "id" to 4,
-                "richId" to 1,
-                "uuid" to UUID.randomUUID().toString(),
-                "quote" to "지속적인 혁신이 없다면 도태될 것이다.",
-                "author" to "Elon Musk",
-                "isBookmarked" to false
-            ),
-            mapOf(
-                "id" to 5,
-                "richId" to 1,
-                "uuid" to UUID.randomUUID().toString(),
-                "quote" to "성공을 확신하지 못해도 시도해야 한다.",
-                "author" to "Elon Musk",
-                "isBookmarked" to false
-            ),
-            mapOf(
-                "id" to 6,
-                "richId" to 1,
-                "uuid" to UUID.randomUUID().toString(),
-                "quote" to "나의 목표는 단순한 것이 아니다. 나는 인류의 미래를 바꿀 것이다.",
-                "author" to "Elon Musk",
-                "isBookmarked" to false
-            ),
-            mapOf(
-                "id" to 7,
-                "richId" to 1,
-                "uuid" to UUID.randomUUID().toString(),
-                "quote" to "비판을 받아들이고, 더 나은 방향으로 나아가라.",
-                "author" to "Elon Musk",
-                "isBookmarked" to false
-            ),
-            mapOf(
-                "id" to 8,
-                "richId" to 1,
-                "uuid" to UUID.randomUUID().toString(),
-                "quote" to "대부분의 사람들이 실패하는 이유는 실행하지 않기 때문이다.",
-                "author" to "Elon Musk",
-                "isBookmarked" to false
-            ),
-            mapOf(
-                "id" to 9,
-                "richId" to 1,
-                "uuid" to UUID.randomUUID().toString(),
-                "quote" to "기술의 발전은 필수적이다. 우리는 멈출 수 없다.",
-                "author" to "Elon Musk",
-                "isBookmarked" to false
-            ),
-            mapOf(
-                "id" to 10,
-                "richId" to 1,
-                "uuid" to UUID.randomUUID().toString(),
-                "quote" to "불가능하다고 생각되는 일을 해내야만 혁신이 이루어진다.",
-                "author" to "Elon Musk",
-                "isBookmarked" to false
-            )
+        val quotes = listOf(
+            "미리 정답을 알고 있는 일만 한다면, 결국 회사는 사라질 것이다.",
+            "우리는 비전에 대해서는 고집스럽지만, 세부 사항에는 유연하다.",
+            "당신이 고객을 만족시키면, 그들은 다른 사람에게 그것을 이야기할 것이고, 아주 강력한 마케팅이 된다.",
+            "당신이 장기적으로 생각한다면, 단기적으로 돈을 덜 벌게 될 수도 있지만, 궁극적으로 더 많은 돈을 벌게 된다.",
+            "우리가 가진 자원의 크기에 의해 결정되는 것이 아니라, 우리가 가진 야망의 크기에 의해 결정된다.",
+            "고객은 항상 더 나은 것을 원한다. 그리고 그들이 원하는 것을 제공하는 것이 우리가 돈을 버는 방법이다.",
+            "우리는 항상 장기적인 관점에서 투자한다. 단기적인 이익에 집착하면 미래를 잃게 된다.",
+            "위험을 감수하지 않으면, 큰 돈을 벌 기회도 얻지 못한다.",
+            "기업의 가치는 돈이 아니라, 고객의 신뢰에서 나온다.",
+            "작은 실험들을 많이 해라. 그중 몇 개는 크게 성공할 것이고, 그것이 돈이 된다.",
+            "회사가 고객보다 자기 자신을 더 중요하게 생각하는 순간, 돈을 잃기 시작한다.",
+            "비즈니스에서 돈을 벌고 싶다면, 남들보다 한 걸음 앞서 있어야 한다.",
+            "돈은 결과이지 목표가 아니다. 좋은 회사를 만들면 돈은 자연스럽게 따라온다.",
+            "기업은 규모가 아니라, 얼마나 고객 중심적인가에 따라 성공이 결정된다.",
+            "우리가 오늘 혁신하지 않으면, 내일 경쟁자가 우리를 무너뜨릴 것이다.",
+            "비즈니스에서는 실수도 자산이다. 하지만 같은 실수를 반복하면 돈을 잃는다.",
+            "현명한 사람들은 위기를 기회로 만든다. 가장 큰 돈은 변화 속에서 벌린다.",
+            "우리는 실패할 수 있다. 하지만 진짜 위험은 시도조차 하지 않는 것이다.",
+            "고객이 불만을 가질 때, 그것은 우리가 개선하고 돈을 벌 수 있는 기회다.",
+            "돈은 단순한 숫자가 아니라, 신뢰의 증거다.",
+            "성공적인 기업은 돈을 어떻게 버는지가 아니라, 어떻게 가치를 창출하는지가 중요하다.",
+            "오늘의 돈보다 내일의 가치를 생각하라.",
+            "돈이 목표라면 오래가지 못한다. 하지만 고객의 문제를 해결하면 돈은 따라온다.",
+            "효율적으로 일하지 않으면, 비용이 증가하고 결국 돈을 잃는다.",
+            "사람들이 원하는 것을 제공하는 것이 가장 확실한 돈 버는 방법이다.",
+            "단기적인 손해를 감수하더라도, 장기적인 성공을 위해 투자해야 한다.",
+            "어려운 시기일수록 더 많은 기회가 있다. 위기를 활용하는 사람이 돈을 번다.",
+            "돈을 벌기 위해서는 고객이 행복해야 한다. 고객이 행복하면 돈은 자연스럽게 따라온다.",
+            "이익보다 중요한 것은 신뢰다. 신뢰를 쌓으면 돈은 따라온다.",
+            "위대한 기업은 고객의 기대를 뛰어넘는다. 기대를 뛰어넘는 순간, 돈도 함께 따라온다."
         )
 
-        val documentRef = firestore.collection("quotes").document(elonMuskUUID)
+        val quoteList = quotes.mapIndexed { index, quote ->
+            mapOf(
+                "id" to index + 1,
+                "richId" to richId,
+                "uuid" to UUID.randomUUID().toString(),
+                "quote" to quote,
+                "author" to author,
+                "isBookmarked" to false
+            )
+        }
+
+        val documentRef = firestore.collection("quotes").document(authorUUID)
 
         // 데이터를 한 번에 저장 (배치)
         documentRef.set(mapOf("quotes" to quoteList))
             .addOnSuccessListener {
-                println("🔥 Elon Musk 명언 10개 Firestore 저장 완료!")
+                println("🔥 명언 Firestore 저장 완료!")
             }
             .addOnFailureListener { e ->
                 println("❌ Firestore 저장 실패: ${e.message}")

@@ -67,6 +67,11 @@ class QuoteRepository(application: Application) {
         }
     }
 
+    fun deleteQuotesByRichId(richId: Int){
+        billionaireDao.deleteQuotesByRichId(richId)
+    }
+
+
     companion object {
         private var INSTANCE: QuoteRepository? = null
         fun get(context: Context) = get(context.applicationContext as Application)

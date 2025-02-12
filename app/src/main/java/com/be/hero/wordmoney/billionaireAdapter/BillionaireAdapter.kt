@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.be.hero.wordmoney.R
-import com.be.hero.wordmoney.data.Billionaire
+import com.be.hero.wordmoney.billionaireData.Billionaire
 import com.be.hero.wordmoney.databinding.ItemRichBinding
 
 
@@ -37,7 +37,6 @@ class BillionaireAdapter : ListAdapter<Billionaire, BillionaireAdapter.Billionai
             binding.tvRank.text = "${billionaire.listPosition}위"
             binding.richName.text = billionaire.name
             binding.property.text = billionaire.netWorth
-            binding.tvNumberQuotes.text = "돈이 되는 말 총 ${billionaire.quoteCount}개"
 
             val profileModels = billionaire.description.map { ProfileModel(it) }
             binding.rvProfile.layoutManager = LinearLayoutManager(binding.root.context, LinearLayoutManager.HORIZONTAL, false)
