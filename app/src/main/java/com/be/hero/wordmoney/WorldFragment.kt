@@ -4,15 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.be.hero.wordmoney.billionaireAdapter.BillionaireAdapter
 import com.be.hero.wordmoney.billionaireData.BillionaireViewModel
 import com.be.hero.wordmoney.billionaireData.Billionaire
 import com.be.hero.wordmoney.databinding.FragmentWorldBinding
+import com.be.hero.wordmoney.dialog.PremiumDialog
 import com.be.hero.wordmoney.quoteData.QuoteViewModel
+import kotlinx.coroutines.launch
 
 
 class WorldFragment : Fragment() {
@@ -43,16 +45,24 @@ class WorldFragment : Fragment() {
             adapter = billionaireAdapter
             billionaireAdapter.setOnItemClickListener(object : BillionaireAdapter.ItemClickListener {
                 override fun addClick(billionaire: Billionaire) {
-                    if (!billionaire.isSelected) {
-                        quoteViewModel.fetchAndSaveQuotesByBillionaire(billionaire)
-                    } else {
-                        //해당 quote 삭제 코드
-                        Toast.makeText(context, billionaire.id.toString(), Toast.LENGTH_SHORT).show()
-                        quoteViewModel.deleteQuotesForBillionaire(billionaire.id)
+
+                    lifecycleScope.launch {
+                        val count = billionaireViewModel.getSelectedBillionaireCount() // ✅ 직접 개수 확인
+
+                        if (!billionaire.isSelected) {
+                            if (count >= 5) {
+                                openPremiumDialog() // ✅ 다이얼로그 띄우기
+                            } else {
+                                quoteViewModel.fetchAndSaveQuotesByBillionaire(billionaire)
+                            }
+                        } else {
+                            //해당 quote 삭제 코드
+                            quoteViewModel.deleteQuotesForBillionaire(billionaire.id)
+                        }
+                        val updatedBillionaire = billionaire.copy(isSelected = !billionaire.isSelected)
+                        billionaireViewModel.updateBillionaireIsSelected(updatedBillionaire)
+
                     }
-                    val updatedBillionaire = billionaire.copy(isSelected = !billionaire.isSelected)
-                    Toast.makeText(context, updatedBillionaire.isSelected.toString(), Toast.LENGTH_SHORT).show()
-                    billionaireViewModel.updateBillionaireIsSelected(updatedBillionaire)
                 }
             })
         }
@@ -60,6 +70,11 @@ class WorldFragment : Fragment() {
         return binding.root
     }
 
+    private fun openPremiumDialog() {
+        if (!isAdded) return
+        val dialog = PremiumDialog()
+        dialog.show(childFragmentManager, "premium_dialog")
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -15,12 +15,6 @@ open class CompatBottomSheetDialog : BottomSheetDialogFragment() {
     private val bottomSheet
         get() = dialog?.findViewById(com.google.android.material.R.id.design_bottom_sheet) as? FrameLayout
 
-
-    private val keyboard: InputMethodManager by lazy {
-        activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-    }
-
-
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return super.onCreateDialog(savedInstanceState).apply {
             if(this is BottomSheetDialog){

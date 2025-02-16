@@ -110,7 +110,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="기능에 제한이 사라집니다. (인물 5명 → 무제한)"
+            android:text="인물 5명 → 무제한"
             app:layout_constraintStart_toEndOf="@id/tv_no_limit_ic"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"

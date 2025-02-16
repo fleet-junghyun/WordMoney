@@ -19,6 +19,10 @@ class PremiumDialog : CompatBottomSheetDialog() {
     ): View {
         _binding = DialogPremiumBinding.inflate(inflater, container, false)
 
+        binding.apply {
+            exit.setOnClickListener { dismiss() }
+        }
+
         return binding.root
     }
 }

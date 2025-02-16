@@ -72,6 +72,8 @@ class QuoteRepository(application: Application) {
     }
 
 
+
+
     companion object {
         private var INSTANCE: QuoteRepository? = null
         fun get(context: Context) = get(context.applicationContext as Application)

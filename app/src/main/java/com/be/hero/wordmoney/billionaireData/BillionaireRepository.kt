@@ -61,6 +61,12 @@ class BillionaireRepository(application: Application) {
         return billionaireDao.getAllBillionaires()
     }
 
+    // 현재 저장된 부자 수 가져오기
+    fun getSelectedBillionaireCount(): Int {
+        return billionaireDao.getSelectedBillionaireCount()
+    }
+
+
     fun insertBillionaireToFirestore(billionaire: Billionaire) {
         val db = FirebaseFirestore.getInstance()
 

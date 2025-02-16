@@ -20,4 +20,6 @@ interface BillionaireDao {
     @Query("UPDATE billionaires SET isSelected = :isSelected WHERE id = :billionaireId")
     fun updateBillionaireSelection(billionaireId: Int, isSelected: Boolean) // ✅ 선택 상태 업데이트 추가
 
+    @Query("SELECT COUNT(*) FROM billionaires WHERE isSelected = 1")
+    fun getSelectedBillionaireCount(): Int
 }

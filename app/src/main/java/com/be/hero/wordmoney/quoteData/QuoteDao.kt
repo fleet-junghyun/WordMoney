@@ -24,4 +24,5 @@ interface QuoteDao {
 
     @Query("DELETE FROM quotes WHERE richId = :richId")
     fun deleteQuotesByRichId(richId: Int)
+
 }
