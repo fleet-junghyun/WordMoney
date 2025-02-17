@@ -13,11 +13,11 @@ import kotlinx.coroutines.launch
 class QuoteRepository(application: Application) {
     private val firestore = FirebaseFirestore.getInstance()
     private val db = AppDatabase.get(application)
-    private val billionaireDao = db.quoteDao()
+    private val quoteDao = db.quoteDao()
 
     // ✅ Room의 LiveData를 직접 반환하도록 수정
     fun getAllQuotes(): LiveData<List<Quote>> {
-        return billionaireDao.getAllQuotes()
+        return quoteDao.getAllQuotes()
     }
 
     /**
@@ -27,7 +27,7 @@ class QuoteRepository(application: Application) {
     fun fetchAndSaveQuotesByBillionaire(richId: Int, richUuid: String) {
         CoroutineScope(Dispatchers.IO).launch {
             // 기존 Room 데이터의 Quote ID 리스트를 가져옴
-            val localQuoteIds = billionaireDao.getQuotesByBillionaireList(richId)
+            val localQuoteIds = quoteDao.getQuotesByBillionaireList(richId)
 
             firestore.collection("quotes").document(richUuid)
                 .get()
@@ -54,7 +54,7 @@ class QuoteRepository(application: Application) {
 
                     if (newQuotes.isNotEmpty()) {
                         CoroutineScope(Dispatchers.IO).launch {
-                            billionaireDao.insertQuotes(newQuotes)
+                            quoteDao.insertQuotes(newQuotes)
                             Log.d("QuoteRepository", "Firestore에서 새 명언 ${newQuotes.size}개 Room에 저장 완료!")
                         }
                     } else {
@@ -66,11 +66,14 @@ class QuoteRepository(application: Application) {
                 }
         }
     }
-
+    // 명언 삭제 코드(rich_id)
     fun deleteQuotesByRichId(richId: Int){
-        billionaireDao.deleteQuotesByRichId(richId)
+        quoteDao.deleteQuotesByRichId(richId)
     }
 
+    fun getRandomQuote(): Quote{
+        return quoteDao.getRandomQuote()
+    }
 
 
 

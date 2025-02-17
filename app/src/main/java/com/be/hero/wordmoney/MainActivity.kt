@@ -11,6 +11,7 @@ import com.be.hero.wordmoney.billionaireData.BillionaireViewModel
 import com.be.hero.wordmoney.billionaireData.Billionaire
 import com.be.hero.wordmoney.databinding.ActivityMainBinding
 import com.be.hero.wordmoney.quoteData.QuoteViewModel
+import com.be.hero.wordmoney.widget.WidgetUpdateWorker
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.UUID
 
@@ -35,6 +36,12 @@ class MainActivity : AppCompatActivity() {
             }
         }
         setViewPager()
+        setWidget()
+    }
+
+    private fun setWidget(){
+        WidgetUpdateWorker.scheduleWidgetUpdate(this)
+
     }
 
     private fun setViewPager() {

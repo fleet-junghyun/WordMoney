@@ -25,4 +25,7 @@ interface QuoteDao {
     @Query("DELETE FROM quotes WHERE richId = :richId")
     fun deleteQuotesByRichId(richId: Int)
 
+    @Query("SELECT * FROM quotes ORDER BY RANDOM() LIMIT 1")
+    fun getRandomQuote() : Quote
+
 }
