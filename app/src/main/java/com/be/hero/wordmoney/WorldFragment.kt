@@ -54,14 +54,14 @@ class WorldFragment : Fragment() {
                                 openPremiumDialog() // ✅ 다이얼로그 띄우기
                             } else {
                                 quoteViewModel.fetchAndSaveQuotesByBillionaire(billionaire)
+                                val updatedBillionaire = billionaire.copy(isSelected = !billionaire.isSelected)
+                                billionaireViewModel.updateBillionaireIsSelected(updatedBillionaire)
                             }
                         } else {
                             //해당 quote 삭제 코드
                             quoteViewModel.deleteQuotesForBillionaire(billionaire.id)
-                        }
-                        val updatedBillionaire = billionaire.copy(isSelected = !billionaire.isSelected)
-                        billionaireViewModel.updateBillionaireIsSelected(updatedBillionaire)
-
+                            val updatedBillionaire = billionaire.copy(isSelected = !billionaire.isSelected)
+                            billionaireViewModel.updateBillionaireIsSelected(updatedBillionaire)                        }
                     }
                 }
             })

@@ -1,9 +1,16 @@
 package com.be.hero.wordmoney
 
+import android.appwidget.AppWidgetManager
+import android.content.ComponentName
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.viewpager2.widget.ViewPager2
 import com.be.hero.wordmoney.quoteAdapter.QuotePagerAdapter
@@ -11,8 +18,10 @@ import com.be.hero.wordmoney.billionaireData.BillionaireViewModel
 import com.be.hero.wordmoney.billionaireData.Billionaire
 import com.be.hero.wordmoney.databinding.ActivityMainBinding
 import com.be.hero.wordmoney.quoteData.QuoteViewModel
+import com.be.hero.wordmoney.widget.QuoteWidgetProvider
 import com.be.hero.wordmoney.widget.WidgetUpdateWorker
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.messaging.FirebaseMessaging
 import java.util.UUID
 
 
@@ -22,6 +31,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var quotePagerAdapter: QuotePagerAdapter
     private val quoteViewModel: QuoteViewModel by viewModels() // 🔥 ViewModel 사용
     private val billionaireViewModel: BillionaireViewModel by viewModels()
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,12 +47,54 @@ class MainActivity : AppCompatActivity() {
             }
         }
         setViewPager()
-        setWidget()
+
+        // ✅ WorkManager 실행 보장
+        WidgetUpdateWorker.scheduleWidgetUpdate(this)
+        updateAllWidgets()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // ✅ API 33 이상에서만 실행
+            if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
+
+        setFCM()
     }
 
-    private fun setWidget(){
-        WidgetUpdateWorker.scheduleWidgetUpdate(this)
+    private fun setFCM(){
+        FirebaseMessaging.getInstance().token
+            .addOnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.w("FCM", "❌ 토큰 가져오기 실패", task.exception)
+                    return@addOnCompleteListener
+                }
+                val token = task.result
+                Log.d("FCM", "✅ 현재 FCM 토큰: $token")
+            }
+    }
 
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            Log.d("FCM", "✅ 푸시 알림 권한 허용됨")
+        } else {
+            Log.e("FCM", "❌ 푸시 알림 권한 거부됨")
+        }
+    }
+
+    private fun updateAllWidgets() {
+        val appWidgetManager = AppWidgetManager.getInstance(this)
+        val componentName = ComponentName(this, QuoteWidgetProvider::class.java)
+        val appWidgetIds = appWidgetManager.getAppWidgetIds(componentName)
+
+        val viewModel = QuoteViewModel(application)
+
+        for (appWidgetId in appWidgetIds) {
+            QuoteWidgetProvider.updateAppWidget(this, appWidgetManager, appWidgetId, viewModel)
+        }
+
+        // ✅ WorkManager가 설정되지 않았다면 실행 (앱 실행 시 주기적 업데이트 보장)
+        WidgetUpdateWorker.scheduleWidgetUpdate(this)
     }
 
     private fun setViewPager() {

@@ -66,11 +66,17 @@ dependencies {
 }
 
 dependencies {
+
     implementation(libs.androidx.work.runtime.ktx)
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation("org.jetbrains.kotlinx:kotlinx-metadata-jvm:0.9.0")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
     implementation ("androidx.lifecycle:lifecycle-common-java8:2.6.2")
+
+    implementation ("com.google.firebase:firebase-messaging-ktx:24.1.0" ) // ✅ FCM 라이브러리 추가
+    implementation ("com.google.firebase:firebase-auth-ktx:22.1.1") // ✅ Firebase Auth 추가
+
+
 }
 
