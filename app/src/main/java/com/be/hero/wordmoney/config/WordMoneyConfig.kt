@@ -19,9 +19,18 @@ class WordMoneyConfig private constructor(application: Application) {
             }
         }
 
+    var isToken
+        get() = config.getString(FCM_TOKEN,"")
+        set(value){
+            config.edit{
+                putString(FCM_TOKEN,value)
+            }
+        }
+
     companion object {
         private const val PREF_NAME = "WordMoneyPreferences" // ✅ SharedPreferences 이름 추가
         private const val PREMIUM_USER = "Premium.User"
+        private const val FCM_TOKEN = "Fcm.Token"
 
 
         private var instance: WordMoneyConfig? = null

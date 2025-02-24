@@ -48,7 +48,6 @@ class WorldFragment : Fragment() {
 
                     lifecycleScope.launch {
                         val count = billionaireViewModel.getSelectedBillionaireCount() // ✅ 직접 개수 확인
-
                         if (!billionaire.isSelected) {
                             if (count >= 5) {
                                 openPremiumDialog() // ✅ 다이얼로그 띄우기
