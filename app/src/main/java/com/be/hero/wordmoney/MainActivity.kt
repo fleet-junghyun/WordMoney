@@ -10,20 +10,18 @@ import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.viewpager2.widget.ViewPager2
-import com.be.hero.wordmoney.quoteAdapter.QuotePagerAdapter
-import com.be.hero.wordmoney.billionaireData.BillionaireViewModel
 import com.be.hero.wordmoney.billionaireData.Billionaire
+import com.be.hero.wordmoney.billionaireData.BillionaireViewModel
 import com.be.hero.wordmoney.config.WordMoneyConfig
 import com.be.hero.wordmoney.databinding.ActivityMainBinding
+import com.be.hero.wordmoney.quoteAdapter.QuotePagerAdapter
 import com.be.hero.wordmoney.quoteData.QuoteViewModel
+import com.be.hero.wordmoney.userData.UserViewModel
 import com.be.hero.wordmoney.widget.QuoteWidgetProvider
 import com.be.hero.wordmoney.widget.WidgetUpdateWorker
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.SetOptions
 import com.google.firebase.messaging.FirebaseMessaging
 import java.util.UUID
 
@@ -34,12 +32,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var quotePagerAdapter: QuotePagerAdapter
     private val quoteViewModel: QuoteViewModel by viewModels() // 🔥 ViewModel 사용
     private val billionaireViewModel: BillionaireViewModel by viewModels()
+    private val userViewModel: UserViewModel by viewModels()
 
-    private val db = FirebaseFirestore.getInstance()
-
-    private val config by lazy {
-        WordMoneyConfig.get(application)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +49,8 @@ class MainActivity : AppCompatActivity() {
         }
         setViewPager()
 
+        saveUserTokenToFirestore()
+
         // ✅ WorkManager 실행 보장
         WidgetUpdateWorker.scheduleWidgetUpdate(this)
         updateAllWidgets()
@@ -63,44 +59,18 @@ class MainActivity : AppCompatActivity() {
                 requestPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
             }
         }
-        saveUserTokenToFirestore()
-//        setFCM()
     }
+
 
     private fun saveUserTokenToFirestore() {
         FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
-            if (!task.isSuccessful) {
-                Log.e("FCM", "❌ FCM 토큰 가져오기 실패", task.exception)
-                return@addOnCompleteListener
-            }
-
-            val newToken = task.result ?: return@addOnCompleteListener
-            val oldToken = config.isToken
-
-            // ✅ 기존 토큰과 동일하면 Firestore 업데이트 방지
-            if (oldToken != null && oldToken == newToken) {
-                Log.d("FCM", "✅ 기존 FCM 토큰과 동일, 업데이트 불필요")
-                return@addOnCompleteListener
-            }
-
-            // ✅ 새로운 FCM 토큰을 Firestore에 저장
-            val userRef = db.collection("users").document(newToken)
-            val userData = hashMapOf(
-                "token" to newToken,
-                "timestamp" to System.currentTimeMillis(), // ✅ 최근 업데이트 시간 저장 (옵션)
-                "billionaire" to listOf<String>()
-            )
-
-            userRef.set(userData, SetOptions.merge())
-                .addOnSuccessListener {
-                    // ✅ 새로운 토큰을 SharedPreferences에 저장
-                  config.isToken = newToken
-                }
-                .addOnFailureListener { e ->
-                    Log.e("Firestore", "❌ Firestore 저장 실패", e)
-                }
+            if (!task.isSuccessful) return@addOnCompleteListener
+            val token = task.result ?: return@addOnCompleteListener
+            userViewModel.saveUserToken(token)
+            userViewModel.fetchFollowingList(token) // ✅ Firestore에서 팔로우 리스트 불러오기
         }
     }
+
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()

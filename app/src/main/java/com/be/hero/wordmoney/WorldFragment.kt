@@ -14,6 +14,7 @@ import com.be.hero.wordmoney.billionaireData.Billionaire
 import com.be.hero.wordmoney.databinding.FragmentWorldBinding
 import com.be.hero.wordmoney.dialog.PremiumDialog
 import com.be.hero.wordmoney.quoteData.QuoteViewModel
+import com.be.hero.wordmoney.userData.UserViewModel
 import kotlinx.coroutines.launch
 
 
@@ -22,6 +23,7 @@ class WorldFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var billionaireViewModel: BillionaireViewModel
     private lateinit var quoteViewModel: QuoteViewModel
+    private lateinit var userViewModel: UserViewModel
 
     private val billionaireAdapter: BillionaireAdapter by lazy {
         BillionaireAdapter()
@@ -35,6 +37,7 @@ class WorldFragment : Fragment() {
 
         billionaireViewModel = ViewModelProvider(this)[BillionaireViewModel::class.java]
         quoteViewModel = ViewModelProvider(this)[QuoteViewModel::class.java]
+        userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
 
         billionaireViewModel.billionaires.observe(viewLifecycleOwner) { billionaire ->
             billionaireAdapter.submitList(billionaire)
@@ -55,13 +58,18 @@ class WorldFragment : Fragment() {
                                 quoteViewModel.fetchAndSaveQuotesByBillionaire(billionaire)
                                 val updatedBillionaire = billionaire.copy(isSelected = !billionaire.isSelected)
                                 billionaireViewModel.updateBillionaireIsSelected(updatedBillionaire)
+                                userViewModel.followBillionaire(updatedBillionaire.uuid, updatedBillionaire.isSelected)
                             }
                         } else {
                             //해당 quote 삭제 코드
                             quoteViewModel.deleteQuotesForBillionaire(billionaire.id)
                             val updatedBillionaire = billionaire.copy(isSelected = !billionaire.isSelected)
-                            billionaireViewModel.updateBillionaireIsSelected(updatedBillionaire)                        }
+                            billionaireViewModel.updateBillionaireIsSelected(updatedBillionaire)
+                            userViewModel.followBillionaire(updatedBillionaire.uuid, updatedBillionaire.isSelected)
+                        }
                     }
+
+
                 }
             })
         }
