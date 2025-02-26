@@ -5,7 +5,8 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "quotes")
 data class QuoteEntity(
-    @PrimaryKey val id: Int,  // Room에서 기본 키
+    @PrimaryKey (autoGenerate = true)
+    val id: Int = 0,  // Room에서 기본 키
     val richId: Int,          // 해당 명언을 말한 부자의 ID
     val uuid: String,         // Firestore의 문서 UUID
     val quote: String,        // 명언 내용

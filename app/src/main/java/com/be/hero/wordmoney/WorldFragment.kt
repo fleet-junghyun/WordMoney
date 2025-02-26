@@ -1,6 +1,7 @@
 package com.be.hero.wordmoney
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -48,28 +49,23 @@ class WorldFragment : Fragment() {
             adapter = billionaireAdapter
             billionaireAdapter.setOnItemClickListener(object : BillionaireAdapter.ItemClickListener {
                 override fun addClick(billionaire: Billionaire) {
-
                     lifecycleScope.launch {
                         val count = billionaireViewModel.getSelectedBillionaireCount() // ✅ 직접 개수 확인
-                        if (!billionaire.isSelected) {
-                            if (count >= 5) {
-                                openPremiumDialog() // ✅ 다이얼로그 띄우기
-                            } else {
-                                quoteViewModel.fetchAndSaveQuotesByBillionaire(billionaire)
-                                val updatedBillionaire = billionaire.copy(isSelected = !billionaire.isSelected)
-                                billionaireViewModel.updateBillionaireIsSelected(updatedBillionaire)
-                                userViewModel.followBillionaire(updatedBillionaire.uuid, updatedBillionaire.isSelected)
-                            }
-                        } else {
+                        if (billionaire.isSelected) {
                             //해당 quote 삭제 코드
+                            Log.d("elon_musk","error")
                             quoteViewModel.deleteQuotesForBillionaire(billionaire.id)
                             val updatedBillionaire = billionaire.copy(isSelected = !billionaire.isSelected)
                             billionaireViewModel.updateBillionaireIsSelected(updatedBillionaire)
                             userViewModel.followBillionaire(updatedBillionaire.uuid, updatedBillionaire.isSelected)
+                        } else {
+                            quoteViewModel.fetchAndSaveQuotesByBillionaire(billionaire)
+                            val updatedBillionaire = billionaire.copy(isSelected = !billionaire.isSelected)
+                            billionaireViewModel.updateBillionaireIsSelected(updatedBillionaire)
+                            userViewModel.followBillionaire(updatedBillionaire.uuid, updatedBillionaire.isSelected)
+
                         }
                     }
-
-
                 }
             })
         }

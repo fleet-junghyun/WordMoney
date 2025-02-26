@@ -51,6 +51,9 @@ class MainActivity : AppCompatActivity() {
 
         saveUserTokenToFirestore()
 
+        //getToken 저장
+        userViewModel.getToken()
+
         // ✅ WorkManager 실행 보장
         WidgetUpdateWorker.scheduleWidgetUpdate(this)
         updateAllWidgets()
@@ -98,12 +101,12 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-
     private fun setViewPager() {
         quotePagerAdapter = QuotePagerAdapter(emptyList())
         binding.viewPager.adapter = quotePagerAdapter
         binding.viewPager.orientation = ViewPager2.ORIENTATION_VERTICAL
         quoteViewModel.quotes.observe(this, Observer { quotes ->
+            Log.d("guotes_size", quotes.size.toString())
             quotePagerAdapter.updateQuotes(quotes)
         })
     }

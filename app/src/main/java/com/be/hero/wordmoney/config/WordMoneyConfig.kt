@@ -20,7 +20,7 @@ class WordMoneyConfig private constructor(application: Application) {
         }
 
     var isToken
-        get() = config.getString(FCM_TOKEN,"")
+        get() = config.getString(FCM_TOKEN,null)
         set(value){
             config.edit{
                 putString(FCM_TOKEN,value)

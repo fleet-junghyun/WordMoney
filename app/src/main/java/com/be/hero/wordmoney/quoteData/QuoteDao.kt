@@ -12,7 +12,7 @@ interface QuoteDao {
     @Query("SELECT * FROM quotes ORDER BY RANDOM()")
     fun getAllQuotes(): LiveData<List<Quote>> // 🔥 모든 명언 가져오기
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     suspend fun insertQuotes(quotes: List<QuoteEntity>) // 여러 개 명언 저장
 
     @Query("SELECT id FROM quotes")

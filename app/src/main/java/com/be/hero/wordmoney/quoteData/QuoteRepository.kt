@@ -9,6 +9,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 class QuoteRepository(application: Application) {
     private val firestore = FirebaseFirestore.getInstance()
@@ -24,11 +25,9 @@ class QuoteRepository(application: Application) {
      * Firestore에서 해당 부자의 Quote 데이터를 가져와서 Room에 저장하는 함수
      * Document ID는 부자의 uuid로 Firestore에서 관리되고, 데이터는 quotes 필드에 배열로 저장되어 있다고 가정함.
      */
-    fun fetchAndSaveQuotesByBillionaire(richId: Int, richUuid: String) {
-        CoroutineScope(Dispatchers.IO).launch {
-            // 기존 Room 데이터의 Quote ID 리스트를 가져옴
-            val localQuoteIds = quoteDao.getQuotesByBillionaireList(richId)
+    fun fetchAndSaveQuotesByBillionaire(richUuid: String) {
 
+        CoroutineScope(Dispatchers.IO).launch {
             firestore.collection("quotes").document(richUuid)
                 .get()
                 .addOnSuccessListener { document ->
@@ -39,17 +38,18 @@ class QuoteRepository(application: Application) {
                     for (quoteData in quotesArray) {
                         // QuoteEntity와 Quote data class가 동일한 구조이므로 그대로 생성
                         val quote = QuoteEntity(
-                            id = (quoteData["id"] as? Long)?.toInt() ?: 0,
                             richId = (quoteData["richId"] as? Long)?.toInt() ?: 0,
                             uuid = quoteData["uuid"] as? String ?: "",
                             quote = quoteData["quote"] as? String ?: "",
                             author = quoteData["author"] as? String ?: "",
                             isBookmarked = quoteData["isBookmarked"] as? Boolean ?: false
                         )
+                        newQuotes.add(quote)
+//
 
-                        if (!localQuoteIds.contains(quote.id)) {
-                            newQuotes.add(quote)
-                        }
+//                        if (!localQuoteIds.contains(quote.id)) {
+//                            newQuotes.add(quote)
+//                        }
                     }
 
                     if (newQuotes.isNotEmpty()) {
@@ -66,15 +66,16 @@ class QuoteRepository(application: Application) {
                 }
         }
     }
+
+
     // 명언 삭제 코드(rich_id)
-    fun deleteQuotesByRichId(richId: Int){
+    fun deleteQuotesByRichId(richId: Int) {
         quoteDao.deleteQuotesByRichId(richId)
     }
 
-    fun getRandomQuote(): Quote{
+    fun getRandomQuote(): Quote {
         return quoteDao.getRandomQuote()
     }
-
 
 
     companion object {

@@ -1,6 +1,7 @@
 package com.be.hero.wordmoney.userData
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,7 +11,7 @@ import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class UserViewModel (application: Application) : AndroidViewModel(application)  {
+class UserViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository = UserRepository.get(application)
 
@@ -21,10 +22,10 @@ class UserViewModel (application: Application) : AndroidViewModel(application)  
         WordMoneyConfig.get(application)
     }
 
-
     init {
         getToken()
     }
+
 
     // ✅ FCM 토큰 가져오기 (SharedPreferences에서 로드)
     fun getToken() {
@@ -34,7 +35,7 @@ class UserViewModel (application: Application) : AndroidViewModel(application)  
             FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val newToken = task.result
-                    if (newToken != null) {
+                    if (!newToken.isNullOrEmpty()) {
                         config.isToken = newToken
                     }
                 }
@@ -58,6 +59,7 @@ class UserViewModel (application: Application) : AndroidViewModel(application)  
 
     // ✅ 팔로우/언팔로우 실행 후 UI 업데이트
     fun followBillionaire(billionaireUUID: String, isFollowing: Boolean) {
+        Log.d("Firestore", "followBillionaire() token = ${config.isToken}")
         repository.followBillionaire(config.isToken.toString(), billionaireUUID, isFollowing) { success ->
             if (success) {
                 fetchFollowingList(config.isToken.toString()) // ✅ Firestore 업데이트 후 UI 반영
