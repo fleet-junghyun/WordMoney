@@ -1,7 +1,6 @@
 package com.be.hero.wordmoney
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,8 +9,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.be.hero.wordmoney.billionaireAdapter.BillionaireAdapter
-import com.be.hero.wordmoney.billionaireData.BillionaireViewModel
 import com.be.hero.wordmoney.billionaireData.Billionaire
+import com.be.hero.wordmoney.billionaireData.BillionaireViewModel
 import com.be.hero.wordmoney.databinding.FragmentWorldBinding
 import com.be.hero.wordmoney.dialog.PremiumDialog
 import com.be.hero.wordmoney.quoteData.QuoteViewModel
@@ -51,25 +50,27 @@ class WorldFragment : Fragment() {
                 override fun addClick(billionaire: Billionaire) {
                     lifecycleScope.launch {
                         val count = billionaireViewModel.getSelectedBillionaireCount() // ✅ 직접 개수 확인
-                        if (billionaire.isSelected) {
-                            //해당 quote 삭제 코드
-                            Log.d("elon_musk","error")
-                            quoteViewModel.deleteQuotesForBillionaire(billionaire.id)
-                            val updatedBillionaire = billionaire.copy(isSelected = !billionaire.isSelected)
-                            billionaireViewModel.updateBillionaireIsSelected(updatedBillionaire)
-                            userViewModel.followBillionaire(updatedBillionaire.uuid, updatedBillionaire.isSelected)
-                        } else {
-                            quoteViewModel.fetchAndSaveQuotesByBillionaire(billionaire)
-                            val updatedBillionaire = billionaire.copy(isSelected = !billionaire.isSelected)
-                            billionaireViewModel.updateBillionaireIsSelected(updatedBillionaire)
-                            userViewModel.followBillionaire(updatedBillionaire.uuid, updatedBillionaire.isSelected)
+                        if (count < 5) {
+                            if (billionaire.isSelected) {
+                                //해당 quote 삭제 코드
+                                quoteViewModel.deleteQuotesForBillionaire(billionaire.id)
+                                val updatedBillionaire = billionaire.copy(isSelected = !billionaire.isSelected)
+                                billionaireViewModel.updateBillionaireIsSelected(updatedBillionaire)
+                                userViewModel.followBillionaire(updatedBillionaire.uuid, updatedBillionaire.isSelected)
+                            } else {
+                                quoteViewModel.fetchAndSaveQuotesByBillionaire(billionaire)
+                                val updatedBillionaire = billionaire.copy(isSelected = !billionaire.isSelected)
+                                billionaireViewModel.updateBillionaireIsSelected(updatedBillionaire)
+                                userViewModel.followBillionaire(updatedBillionaire.uuid, updatedBillionaire.isSelected)
 
+                            }
+                        } else {
+                            openPremiumDialog()
                         }
                     }
                 }
             })
         }
-
         return binding.root
     }
 

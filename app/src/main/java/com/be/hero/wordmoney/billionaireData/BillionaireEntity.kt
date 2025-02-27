@@ -12,7 +12,6 @@ data class BillionaireEntity(
     val netWorth: String,
     @TypeConverters(StringListConverter::class) // 리스트 변환을 위해 추가
     val description: List<String>,
-    val quoteCount: Int,
     val isSelected: Boolean,
     val category: Int,
     val listPosition: Int

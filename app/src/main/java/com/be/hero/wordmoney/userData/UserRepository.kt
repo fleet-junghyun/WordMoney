@@ -2,7 +2,6 @@ package com.be.hero.wordmoney.userData
 
 import android.app.Application
 import android.content.Context
-import com.be.hero.wordmoney.quoteData.QuoteRepository
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await

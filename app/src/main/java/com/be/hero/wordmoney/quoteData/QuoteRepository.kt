@@ -9,7 +9,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 
 class QuoteRepository(application: Application) {
     private val firestore = FirebaseFirestore.getInstance()
@@ -20,11 +19,8 @@ class QuoteRepository(application: Application) {
     fun getAllQuotes(): LiveData<List<Quote>> {
         return quoteDao.getAllQuotes()
     }
-
-    /**
-     * Firestore에서 해당 부자의 Quote 데이터를 가져와서 Room에 저장하는 함수
-     * Document ID는 부자의 uuid로 Firestore에서 관리되고, 데이터는 quotes 필드에 배열로 저장되어 있다고 가정함.
-     */
+    
+     // * Firestore에서 해당 부자의 Quote 데이터를 가져와서 Room에 저장하는 함수
     fun fetchAndSaveQuotesByBillionaire(richUuid: String) {
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -38,6 +34,7 @@ class QuoteRepository(application: Application) {
                     for (quoteData in quotesArray) {
                         // QuoteEntity와 Quote data class가 동일한 구조이므로 그대로 생성
                         val quote = QuoteEntity(
+                            id = 0,
                             richId = (quoteData["richId"] as? Long)?.toInt() ?: 0,
                             uuid = quoteData["uuid"] as? String ?: "",
                             quote = quoteData["quote"] as? String ?: "",
@@ -45,11 +42,6 @@ class QuoteRepository(application: Application) {
                             isBookmarked = quoteData["isBookmarked"] as? Boolean ?: false
                         )
                         newQuotes.add(quote)
-//
-
-//                        if (!localQuoteIds.contains(quote.id)) {
-//                            newQuotes.add(quote)
-//                        }
                     }
 
                     if (newQuotes.isNotEmpty()) {

@@ -77,7 +77,6 @@ class BillionaireRepository(application: Application) {
             "name" to billionaire.name,
             "netWorth" to billionaire.netWorth,
             "description" to billionaire.description,
-            "quoteCount" to billionaire.quoteCount,
             "isSelected" to billionaire.isSelected,
             "category" to billionaire.category,
             "listPosition" to billionaire.listPosition
@@ -101,7 +100,6 @@ class BillionaireRepository(application: Application) {
             name = document.getString("name") ?: "",
             netWorth = document.getString("netWorth") ?: "",
             description = document.get("description") as? List<String> ?: emptyList(),
-            quoteCount = document.getLong("quoteCount")?.toInt() ?: 0,
             isSelected = document.getBoolean("isSelected") ?: false,
             category = document.getLong("category")?.toInt() ?: 0,
             listPosition = document.getLong("listPosition")?.toInt() ?: 0
