@@ -61,8 +61,8 @@ class QuoteRepository(application: Application) {
 
 
     // 명언 삭제 코드(rich_id)
-    fun deleteQuotesByRichId(richId: Int) {
-        quoteDao.deleteQuotesByRichId(richId)
+    fun deleteQuotesByRichId(richUuid: String) {
+        quoteDao.deleteQuotesByRichId(richUuid)
     }
 
     fun getRandomQuote(): Quote {

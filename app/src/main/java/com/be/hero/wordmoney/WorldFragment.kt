@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.be.hero.wordmoney.billionaireAdapter.BillionaireAdapter
 import com.be.hero.wordmoney.billionaireData.Billionaire
 import com.be.hero.wordmoney.billionaireData.BillionaireViewModel
+import com.be.hero.wordmoney.config.WordMoneyConfig
 import com.be.hero.wordmoney.databinding.FragmentWorldBinding
 import com.be.hero.wordmoney.dialog.PremiumDialog
 import com.be.hero.wordmoney.quoteData.QuoteViewModel
@@ -27,6 +28,10 @@ class WorldFragment : Fragment() {
 
     private val billionaireAdapter: BillionaireAdapter by lazy {
         BillionaireAdapter()
+    }
+
+    private val config by lazy {
+        WordMoneyConfig.get(requireActivity())
     }
 
     override fun onCreateView(
@@ -50,22 +55,21 @@ class WorldFragment : Fragment() {
                 override fun addClick(billionaire: Billionaire) {
                     lifecycleScope.launch {
                         val count = billionaireViewModel.getSelectedBillionaireCount() // ✅ 직접 개수 확인
-                        if (count < 5) {
-                            if (billionaire.isSelected) {
-                                //해당 quote 삭제 코드
-                                quoteViewModel.deleteQuotesForBillionaire(billionaire.id)
-                                val updatedBillionaire = billionaire.copy(isSelected = !billionaire.isSelected)
-                                billionaireViewModel.updateBillionaireIsSelected(updatedBillionaire)
-                                userViewModel.followBillionaire(updatedBillionaire.uuid, updatedBillionaire.isSelected)
-                            } else {
+                        if (billionaire.isSelected) {
+                            //해당 quote 삭제 코드
+                            quoteViewModel.deleteQuotesForBillionaire(billionaire.uuid)
+                            val updatedBillionaire = billionaire.copy(isSelected = !billionaire.isSelected)
+                            billionaireViewModel.updateBillionaireIsSelected(updatedBillionaire)
+                            userViewModel.followBillionaire(updatedBillionaire.uuid, updatedBillionaire.isSelected)
+                        } else {
+                            if (!config.isPremium && count < 5) {
                                 quoteViewModel.fetchAndSaveQuotesByBillionaire(billionaire)
                                 val updatedBillionaire = billionaire.copy(isSelected = !billionaire.isSelected)
                                 billionaireViewModel.updateBillionaireIsSelected(updatedBillionaire)
                                 userViewModel.followBillionaire(updatedBillionaire.uuid, updatedBillionaire.isSelected)
-
+                            } else {
+                                openPremiumDialog()
                             }
-                        } else {
-                            openPremiumDialog()
                         }
                     }
                 }

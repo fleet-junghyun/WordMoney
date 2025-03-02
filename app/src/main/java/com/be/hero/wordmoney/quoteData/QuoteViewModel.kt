@@ -19,9 +19,9 @@ class QuoteViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun deleteQuotesForBillionaire(richId: Int) {
+    fun deleteQuotesForBillionaire(richUuid: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.deleteQuotesByRichId(richId)
+            repository.deleteQuotesByRichId(richUuid)
         }
     }
 

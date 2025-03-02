@@ -12,18 +12,15 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.viewpager2.widget.ViewPager2
-import com.be.hero.wordmoney.billionaireData.Billionaire
-import com.be.hero.wordmoney.billionaireData.BillionaireViewModel
 import com.be.hero.wordmoney.config.WordMoneyConfig
 import com.be.hero.wordmoney.databinding.ActivityMainBinding
 import com.be.hero.wordmoney.quoteAdapter.QuotePagerAdapter
+import com.be.hero.wordmoney.quoteData.Quote
 import com.be.hero.wordmoney.quoteData.QuoteViewModel
 import com.be.hero.wordmoney.userData.UserViewModel
 import com.be.hero.wordmoney.widget.QuoteWidgetProvider
 import com.be.hero.wordmoney.widget.WidgetUpdateWorker
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessaging
-import java.util.UUID
 
 
 class MainActivity : AppCompatActivity() {
@@ -31,7 +28,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var quotePagerAdapter: QuotePagerAdapter
     private val quoteViewModel: QuoteViewModel by viewModels() // 🔥 ViewModel 사용
-    private val billionaireViewModel: BillionaireViewModel by viewModels()
     private val userViewModel: UserViewModel by viewModels()
 
     private val config by lazy {
@@ -57,7 +53,6 @@ class MainActivity : AppCompatActivity() {
             saveUserTokenToFirestore()
         }
         setWidget()
-//        insertQuotesToFirestore()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // ✅ API 33 이상에서만 실행
             if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
@@ -114,9 +109,23 @@ class MainActivity : AppCompatActivity() {
         binding.viewPager.adapter = quotePagerAdapter
         binding.viewPager.orientation = ViewPager2.ORIENTATION_VERTICAL
         quoteViewModel.quotes.observe(this, Observer { quotes ->
-            Log.d("quotes_size", "${quotes.size.toString()}")
             quotePagerAdapter.updateQuotes(quotes)
         })
+        quotePagerAdapter.setShareClickListener(object : QuotePagerAdapter.ShareClickListener {
+            override fun shareClick(quote: Quote) {
+                val shareIntent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(
+                        Intent.EXTRA_TEXT,
+                        "\"${quote.quote}\"\n\n- ${quote.author}" // 🔥 줄바꿈 추가
+                    )
+                    type = "text/plain"
+                }
+                val chooser = Intent.createChooser(shareIntent, "공유하기")
+                startActivity(chooser)
+            }
+        }
+        )
     }
 
     private fun goToMenu() {

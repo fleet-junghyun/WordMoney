@@ -22,8 +22,8 @@ interface QuoteDao {
     fun getQuotesByBillionaireList(richId: Int): List<Int> // 🔥 특정 부자의 명언 ID 리스트 가져오기
 
 
-    @Query("DELETE FROM quotes WHERE richId = :richId")
-    fun deleteQuotesByRichId(richId: Int)
+    @Query("DELETE FROM quotes WHERE uuid = :richUuid")
+    fun deleteQuotesByRichId(richUuid: String)
 
     @Query("SELECT * FROM quotes ORDER BY RANDOM() LIMIT 1")
     fun getRandomQuote() : Quote
