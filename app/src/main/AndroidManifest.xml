@@ -19,6 +19,12 @@
         android:theme="@style/Theme.WordMoney"
         tools:targetApi="31">
 
+        <!-- FCM 기본 알림 아이콘 설정 추가 -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_notification" />
+
+
         <!-- ✅ FCM 서비스 선언 (필수) -->
         <service
             android:name=".fcm.MyFirebaseMessagingService"
@@ -28,8 +34,6 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
-
-
 
         <activity
             android:name=".MainActivity"

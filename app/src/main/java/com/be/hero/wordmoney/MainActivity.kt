@@ -4,11 +4,13 @@ import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.viewpager2.widget.ViewPager2
@@ -53,11 +55,44 @@ class MainActivity : AppCompatActivity() {
             saveUserTokenToFirestore()
         }
         setWidget()
+        setOpenCount()
+        Log.d("openCount", config.openCount.toString())
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // ✅ API 33 이상에서만 실행
             if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
                 requestPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
             }
+        }
+    }
+
+    private fun setOpenCount() {
+        config.openCount = config.openCount.plus(1)
+        if (config.openCount == 30 || config.openCount == 50 || config.openCount == 100) {
+            if (!config.isReviewed) {
+                AlertDialog.Builder(this).setTitle("리뷰를 부탁드립니다.").setMessage("앱을 사용하며 느낀 감동을 리뷰로 공유해 주세요. 여러분의 한 마디가 큰 힘이 됩니다 !!\uD83D\uDE47\u200D♂\uFE0F ").setPositiveButton("네") { dialog, _ ->
+                    config.isReviewed = true
+                    openReviewPage()
+                    dialog.dismiss()
+                }
+                    .setNeutralButton("괜찮아요.") { dialog, _ ->
+                        // 필요 시 리뷰 요청 중단 로직 추가
+                        dialog.dismiss()
+                    }
+                    .create()
+                    .show()
+            }
+        }
+    }
+
+    // Google Play 스토어 리뷰 페이지 열기 함수
+    private fun openReviewPage() {
+        val uri = Uri.parse("https://play.google.com/store/apps/details?id=com.nhn.android.search&hl=ko")
+        val goToMarket = Intent(Intent.ACTION_VIEW, uri)
+        try {
+            startActivity(goToMarket)
+        } catch (e: Exception) {
+            val webUri = Uri.parse("https://play.google.com/store/apps/details?id=com.nhn.android.search&hl=ko")
+            startActivity(Intent(Intent.ACTION_VIEW, webUri))
         }
     }
 
