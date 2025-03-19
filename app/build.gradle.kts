@@ -77,6 +77,7 @@ dependencies {
     implementation ("com.google.firebase:firebase-messaging-ktx:24.1.0" ) // ✅ FCM 라이브러리 추가
     implementation ("com.google.firebase:firebase-auth-ktx:22.1.1") // ✅ Firebase Auth 추가
 
+    implementation("com.android.billingclient:billing:7.0.0")
 
 }
 

@@ -13,6 +13,19 @@
         app:layout_constraintTop_toTopOf="parent"
         >
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="프리미엄"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="24dp"
+            />
+
         <ImageView
             android:id="@+id/exit"
             android:layout_width="wrap_content"
@@ -164,7 +177,7 @@
                 android:id="@+id/tv_purchase"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="결제하기"
+                android:text="5900원 결제하기"
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:textSize="15sp"
