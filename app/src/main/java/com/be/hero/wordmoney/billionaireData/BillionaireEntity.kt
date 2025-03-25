@@ -10,6 +10,7 @@ data class BillionaireEntity(
     val uuid: String,
     val name: String,
     val netWorth: String,
+    val property:Long, //자산 숫자.
     @TypeConverters(StringListConverter::class) // 리스트 변환을 위해 추가
     val description: List<String>,
     val isSelected: Boolean,

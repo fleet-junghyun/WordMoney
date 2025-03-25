@@ -44,7 +44,7 @@ class WorldFragment : Fragment() {
         quoteViewModel = ViewModelProvider(this)[QuoteViewModel::class.java]
         userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
 
-        billionaireViewModel.billionaires.observe(viewLifecycleOwner) { billionaire ->
+        billionaireViewModel.sortedBillionaires.observe(viewLifecycleOwner) { billionaire ->
             billionaireAdapter.submitList(billionaire)
         }
 
@@ -62,7 +62,7 @@ class WorldFragment : Fragment() {
                             billionaireViewModel.updateBillionaireIsSelected(updatedBillionaire)
                             userViewModel.followBillionaire(updatedBillionaire.uuid, updatedBillionaire.isSelected)
                         } else {
-                            if (!config.isPremium && count < 5) {
+                            if (config.isPremium || count < 5) {
                                 quoteViewModel.fetchAndSaveQuotesByBillionaire(billionaire)
                                 val updatedBillionaire = billionaire.copy(isSelected = !billionaire.isSelected)
                                 billionaireViewModel.updateBillionaireIsSelected(updatedBillionaire)

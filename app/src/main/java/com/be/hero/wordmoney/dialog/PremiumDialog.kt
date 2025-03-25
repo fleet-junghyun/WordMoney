@@ -13,8 +13,6 @@ import com.android.billingclient.api.ProductDetails
 import com.android.billingclient.api.Purchase
 import com.android.billingclient.api.PurchasesUpdatedListener
 import com.android.billingclient.api.QueryProductDetailsParams
-import com.android.billingclient.api.SkuDetails
-import com.android.billingclient.api.SkuDetailsParams
 import com.be.hero.wordmoney.config.WordMoneyConfig
 import com.be.hero.wordmoney.databinding.DialogPremiumBinding
 
@@ -57,6 +55,7 @@ class PremiumDialog : CompatBottomSheetDialog() {
             }
         }
     }
+
     private fun initBilling() {
         billingClient = BillingClient.newBuilder(requireContext())
             .setListener(purchasesUpdatedListener)

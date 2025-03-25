@@ -34,7 +34,6 @@ class BillionaireAdapter : ListAdapter<Billionaire, BillionaireAdapter.Billionai
 
     inner class BillionaireViewHolder(private val binding: ItemRichBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(billionaire: Billionaire) {
-            binding.tvRank.text = "${billionaire.listPosition}위"
             binding.richName.text = billionaire.name
             binding.property.text = billionaire.netWorth
 

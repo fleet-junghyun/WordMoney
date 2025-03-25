@@ -5,6 +5,7 @@ data class Billionaire(
     val uuid: String,        // Firestore 문서의 UUID
     val name: String,        // 부자 이름
     val netWorth: String,    // 자산 정보
+    val property:Long, //자산 숫자.
     val description: List<String>, // Firestore에서 가져온 description 리스트
     val isSelected: Boolean, // 사용자가 선택한 여부
     val category: Int,       // 카테고리 정보 (예: 세계, 한국, 일본 등)

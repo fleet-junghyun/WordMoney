@@ -16,7 +16,7 @@ android {
         applicationId = "com.be.hero.wordmoney"
         minSdk = 24
         targetSdk = 34
-        versionCode = 1
+        versionCode = 4
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

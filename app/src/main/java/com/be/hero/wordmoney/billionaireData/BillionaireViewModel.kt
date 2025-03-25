@@ -3,6 +3,7 @@ package com.be.hero.wordmoney.billionaireData
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -11,8 +12,9 @@ import kotlinx.coroutines.withContext
 class BillionaireViewModel(application: Application) : AndroidViewModel(application) {
     private val repository = BillionaireRepository.get(application)
 
-    // ✅ MutableLiveData 대신 Room의 LiveData 직접 사용
-    val billionaires: LiveData<List<Billionaire>> = repository.getAllBillionaires()
+    val sortedBillionaires: LiveData<List<Billionaire>> = repository.getAllBillionaires().map { list ->
+        list.sortedByDescending { it.property }
+    }
 
     init {
         firstSaveBillionaires()

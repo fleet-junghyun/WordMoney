@@ -52,8 +52,7 @@ class BillionaireRepository(application: Application) {
         }
     }
 
-    fun updateBillionaireIsSelected(billionaire: Billionaire) = billionaireDao.updateBillionaireSelection(billionaire.id ,billionaire.isSelected)
-
+    fun updateBillionaireIsSelected(billionaire: Billionaire) = billionaireDao.updateBillionaireSelection(billionaire.id, billionaire.isSelected)
 
 
     // ✅ Room의 LiveData를 직접 반환하도록 수정
@@ -76,6 +75,7 @@ class BillionaireRepository(application: Application) {
             "uuid" to billionaire.uuid,
             "name" to billionaire.name,
             "netWorth" to billionaire.netWorth,
+            "property" to billionaire.property,
             "description" to billionaire.description,
             "isSelected" to billionaire.isSelected,
             "category" to billionaire.category,
@@ -99,13 +99,13 @@ class BillionaireRepository(application: Application) {
             uuid = document.getString("uuid") ?: "",
             name = document.getString("name") ?: "",
             netWorth = document.getString("netWorth") ?: "",
+            property = document.getLong("property") ?: 0L,
             description = document.get("description") as? List<String> ?: emptyList(),
             isSelected = document.getBoolean("isSelected") ?: false,
             category = document.getLong("category")?.toInt() ?: 0,
             listPosition = document.getLong("listPosition")?.toInt() ?: 0
         )
     }
-
 
 
     companion object {
