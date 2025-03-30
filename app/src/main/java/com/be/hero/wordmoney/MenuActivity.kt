@@ -24,12 +24,12 @@ class MenuActivity : AppCompatActivity() {
 
     // Google Play 스토어 리뷰 페이지 열기 함수
     private fun openReviewPage() {
-        val uri = Uri.parse("https://play.google.com/store/apps/details?id=com.nhn.android.search&hl=ko")
+        val uri = Uri.parse("https://play.google.com/store/apps/details?id=com.be.hero.wordmoney")
         val goToMarket = Intent(Intent.ACTION_VIEW, uri)
         try {
             startActivity(goToMarket)
         } catch (e: Exception) {
-            val webUri = Uri.parse("https://play.google.com/store/apps/details?id=com.nhn.android.search&hl=ko")
+            val webUri = Uri.parse("https://play.google.com/store/apps/details?id=com.be.hero.wordmoney")
             startActivity(Intent(Intent.ACTION_VIEW, webUri))
         }
     }

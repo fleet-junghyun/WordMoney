@@ -41,6 +41,12 @@ class WordMoneyConfig private constructor(application: Application) {
             config.edit { putBoolean(IS_REVIEWED, value) }
         }
 
+    var isFirst
+        get() = config.getBoolean(IS_FIRST, false)
+        set(values) {
+            config.edit { putBoolean(IS_FIRST, values) }
+        }
+
 
     companion object {
         private const val PREF_NAME = "WordMoneyPreferences" // ✅ SharedPreferences 이름 추가
@@ -48,6 +54,7 @@ class WordMoneyConfig private constructor(application: Application) {
         private const val FCM_TOKEN = "Fcm.Token"
         private const val OPEN_COUNT = "Open.Count"
         private const val IS_REVIEWED = "Is.Reviewed"
+        private const val IS_FIRST = "Is.First"
 
 
         private var instance: WordMoneyConfig? = null

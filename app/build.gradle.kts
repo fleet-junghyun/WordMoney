@@ -16,7 +16,7 @@ android {
         applicationId = "com.be.hero.wordmoney"
         minSdk = 24
         targetSdk = 34
-        versionCode = 4
+        versionCode = 7
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -78,6 +78,8 @@ dependencies {
     implementation ("com.google.firebase:firebase-auth-ktx:22.1.1") // ✅ Firebase Auth 추가
 
     implementation("com.android.billingclient:billing:7.0.0")
+
+    implementation("com.getkeepsafe.taptargetview:taptargetview:1.13.3")
 
 }
 
